@@ -1,12 +1,11 @@
 [build]
-  command = ""          # no build
+  command = ""
   publish = "public"
 
-# Send CORS headers for any JS file
 [[headers]]
   for = "/**/*.js"
   [headers.values]
-    Access-Control-Allow-Origin = "https://pastors.webflow.io"
+    Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type"
     Cache-Control = "no-cache"
