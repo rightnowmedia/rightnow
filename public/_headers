@@ -1,3 +1,8 @@
 /**/*.js
-  Access-Control-Allow-Origin: https://pastors.webflow.io
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, HEAD, OPTIONS
+  Access-Control-Allow-Headers: Content-Type
   Cache-Control: no-cache
+
+/rightnowpastors.js
+  Access-Control-Allow-Origin: *
