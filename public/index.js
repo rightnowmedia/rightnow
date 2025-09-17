@@ -1,1 +1,3 @@
-console.log('it works');
+import { setupPopups } from './components/popups.js';
+
+setupPopups();
