@@ -35,7 +35,6 @@ export function setupForms() {
     });
   });
 
-  
 }
 
 
@@ -46,97 +45,94 @@ export function setupForms() {
 
 
 
-export function selfSchedule() {
+export function selfSchedule(formIds) {
+  // Resolve the forms once
+  const forms = formIds.map(id => document.getElementById(id)).filter(Boolean);
+  if (!forms.length) return;
 
+  const formSet = new Set(forms);
 
   /////// STORE FORM ANSWERS IN LOCAL STORAGE ///////
 
-  (function () {
-    const STORAGE_KEY = 'leadInfo';
+  const FIELD_IDS = [
+    'First-Name','Last-Name','Email','Phone',
+    'Job-Title','Company','City','State','Country'
+  ];
 
-    function snapshot() {
-      const get = (id) => {
-        const el = document.getElementById(id);
-        return el && typeof el.value === 'string' ? el.value.trim() : '';
-      };
-      return {
-        firstName: get('First-Name'),
-        lastName:  get('Last-Name'),
-        email:     get('Email'),
-        phone:     get('Phone'),
-        jobTitle:  get('Job-Title'),
-        company:   get('Company'),
-        city:      get('City'),
-        state:     get('State'),
-        country:   get('Country'),
-        savedAt:   Date.now()
-      };
+  const STORAGE_KEY = 'leadInfo';
+
+  const get = (form, id) => {
+    const el = form.querySelector(`#${id}`);
+    return el && typeof el.value === 'string' ? el.value.trim() : '';
+  };
+
+  const toCamel = (id) => id.toLowerCase().replace(/-(.)/g, (_, c) => c.toUpperCase());
+
+  const snapshot = (form) => {
+    const data = {};
+    for (const id of FIELD_IDS) {
+      const v = get(form, id);
+      if (v !== '') data[toCamel(id)] = v;
     }
+    return data;
+  };
 
-    function saveToLocalStorage() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot()));
-      } catch (e) {
-        // storage unavailable/quota exceeded
-      }
-    }
+  const save = (form) => {
+    try {
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      const patch = snapshot(form);
+      const merged = { ...existing, ...patch, savedAt: Date.now() };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    } catch {}
+  };
 
-    function start() {
-      const forms = [
-        document.getElementById('demoForm_US'),
-        document.getElementById('demoForm_ReturningVisitor')
-      ].filter(Boolean); 
+  const onEdit = (e) => {
+    const form = e.target?.form || e.target?.closest?.('form');
+    if (form && formSet.has(form)) save(form);
+  };
 
-      if (!forms.length) return;
+  document.addEventListener('input', onEdit);
+  document.addEventListener('change', onEdit);
 
-      forms.forEach((form) => {
-        form.addEventListener('input',  saveToLocalStorage, { passive: true });
-        form.addEventListener('change', saveToLocalStorage, { passive: true });
-      });
-
-      window.addEventListener('beforeunload', saveToLocalStorage);
-      window.addEventListener('pagehide', saveToLocalStorage);
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', start, { once: true });
-    } else {
-      start();
-    }
-  })();
+  const onPageHide = () => forms.forEach(save);
+  window.addEventListener('pagehide', onPageHide);
 
 
   /////// CHANGE CAMPAIGNS BASE ON FORM SELECTIONS ///////
 
-  const form = document.getElementById("demoForm_US");
-  const orgSizeSelect = document.getElementById("Org-Size");
-  const jobTitleSelect = document.getElementById("Job-Title");
-  const heading = document.getElementById("Heading");
+  const updateCampaign = (form) => {
+    const orgSize  = form.querySelector('#Org-Size');
+    const jobTitle = form.querySelector('#Job-Title');
+    if (!orgSize || !jobTitle) return;
 
-  function updateFormAction() {
-    const orgIndex = orgSizeSelect.selectedIndex;
-    const jobTitle = jobTitleSelect.value;
+    const heading =
+      document.getElementById('Heading') || form.querySelector('[data-role="heading"]');
 
-    if (jobTitle === "Non-Staff") {
-      // Always force default if Job Title is Employee
-      form.action = "/default-action";
-      heading.innerText = "Go to OVER 750 campaign";
+    const orgIndex = orgSize.selectedIndex;
+    const jt = jobTitle.value;
+
+    if (jt === 'Non-Staff') {
+      form.action = '/default-action';
+      if (heading) heading.innerText = 'Go to OVER 750 campaign';
     } else if (orgIndex <= 2) {
-      // Third option or less in Organization-Size
-      form.action = "/special-action";
-      heading.innerText = "Go to UNDER 750 campaign";
+      form.action = '/special-action';
+      if (heading) heading.innerText = 'Go to UNDER 750 campaign';
     } else {
-      // Everything else
-      form.action = "/default-action";
-      heading.innerText = "Go to OVER 750 campaign";
+      form.action = '/default-action';
+      if (heading) heading.innerText = 'Go to OVER 750 campaign';
     }
-  }
+  };
 
-  orgSizeSelect.addEventListener("change", updateFormAction);
-  jobTitleSelect.addEventListener("change", updateFormAction);
+  forms.forEach(updateCampaign);
 
-  updateFormAction();
+  const onRoutingChange = (e) => {
+    const id = e.target?.id;
+    if (id !== 'Org-Size' && id !== 'Job-Title') return;
+    const form = e.target.form || e.target.closest?.('form');
+    if (form && formSet.has(form)) updateCampaign(form);
+  };
 
+  document.addEventListener('change', onRoutingChange);
 
   
 }

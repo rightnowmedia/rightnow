@@ -1,13 +1,32 @@
 import { setupForms, selfSchedule } from './components/demoforms.js';
 
-if (
-  document.getElementById("demoForm_US") ||
-  document.getElementById("demoForm_US_2") ||
-  document.getElementById("demoForm_US_ReturningVisitor") ||
-  document.getElementById("demoForm_US_ReturningVisitor_2")
-) {
+
+console.log('rightnowmedia loaded');
+
+
+//////////// setupForms ////////////
+
+const setupFormIds = [
+  'demoForm_US',
+  'demoForm_US_ReturningVisitor'
+  'demoForm_US_Popup'
+];
+
+const setupTargets = setupFormIds.map(id => document.getElementById(id)).filter(Boolean);
+if (setupTargets.length > 0) {
   setupForms();
-  selfSchedule();
 }
 
-console.log("rightnowmedia loaded");
+
+
+//////////// selfSchedule ////////////
+
+const selfScheduleIds = [
+  'demoForm_US',
+  'demoForm_US_ReturningVisitor'
+];
+
+const selfScheduleTargets = selfScheduleIds.map(id => document.getElementById(id)).filter(Boolean);
+if (selfScheduleTargets.length > 0) {
+  selfSchedule(selfScheduleIds);
+}
