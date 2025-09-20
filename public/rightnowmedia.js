@@ -8,7 +8,7 @@ console.log('rightnowmedia loaded');
 
 const setupFormIds = [
   'demoForm_US',
-  'demoForm_US_ReturningVisitor'
+  'demoForm_US_ReturningVisitor',
   'demoForm_US_Popup'
 ];
 
@@ -16,7 +16,6 @@ const setupTargets = setupFormIds.map(id => document.getElementById(id)).filter(
 if (setupTargets.length > 0) {
   setupForms();
 }
-
 
 
 //////////// selfSchedule ////////////
