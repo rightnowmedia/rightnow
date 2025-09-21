@@ -4,6 +4,7 @@ export function setupForms() {
 
   //////////// SELECT FIELD BEHAVIOR ////////////
 
+
   document.querySelectorAll("select").forEach((select) => {
     const updateSelectColor = () => {
       const isEmpty = select.value === "";
@@ -11,7 +12,6 @@ export function setupForms() {
       select.style.fontWeight = isEmpty ? "300" : "400";
     };
 
-    // Run once on load
     updateSelectColor();
 
     select.addEventListener("change", () => {
@@ -27,6 +27,8 @@ export function setupForms() {
     });
   });
 
+
+
   //////////// DON'T INTERRUPT THE RV FORM ////////////
 
   document.querySelectorAll('.top-bar-form-field').forEach(function(field) {
@@ -34,6 +36,45 @@ export function setupForms() {
       document.querySelector('.popup-wrap').style.display = 'none';
     });
   });
+
+
+
+
+  //////////// GET UTM SOURCE FROM URL ////////////
+
+  const urlParam = (name) => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name) || '';
+  };
+
+  const SOURCE_MAP = {
+    google:     'Online Advertising: Google',
+    facebook:   'Online Advertising: Facebook',
+    bing:       'Online Advertising: Bing',
+    stackadapt: 'Online Advertising: StackAdapt',
+    email:      'Received an Email from RightNow Media',
+    blog:       'Blog',
+    inclub:     'inclub',
+    gloo:       'Gloo Advertising'
+  };
+
+  const mapSource = (utmSource) =>
+    SOURCE_MAP[utmSource.toLowerCase()] || '';
+
+  const utmSource = decodeURIComponent(urlParam('utm_source'));
+  const sourceName = mapSource(utmSource);
+
+  // Apply to all forms on the page
+  if (sourceName) {
+    const targetFields = document.querySelectorAll(
+      '#Ad-Source, [name="Ad-Source"]'
+    );
+    targetFields.forEach((field) => {
+      field.value = sourceName;
+    });
+  }
+
+
 
 }
 
@@ -51,6 +92,8 @@ export function selfSchedule(formIds) {
   if (!forms.length) return;
 
   const formSet = new Set(forms);
+
+
 
   /////// STORE FORM ANSWERS IN LOCAL STORAGE ///////
 
@@ -96,6 +139,8 @@ export function selfSchedule(formIds) {
 
   const onPageHide = () => forms.forEach(save);
   window.addEventListener('pagehide', onPageHide);
+
+
 
 
   /////// CHANGE CAMPAIGNS BASE ON FORM SELECTIONS ///////
