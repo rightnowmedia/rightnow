@@ -57,7 +57,7 @@ function setupSelfSchedule(formIds, actionConfig) {
 
   forms.forEach(updateCampaign);
   document.addEventListener('change', (e) => {
-    if ((e.target.id === 'Org-Size' || e.target.id === 'Job-Title') && forms.includes(e.target.form)) {
+    if ((e.target.id === 'Organization-Size' || e.target.id === 'Job-Title') && forms.includes(e.target.form)) {
       updateCampaign(e.target.form);
     }
   });
