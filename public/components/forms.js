@@ -13,21 +13,54 @@ export function setupForms(ids) {
   document.querySelectorAll("select").forEach((select) => {
     const update = () => {
       const empty = select.value === "";
-      select.style.color = empty ? "#777" : "#222";
-      select.style.fontWeight = empty ? "300" : "400";
+        select.style.color = empty ? "#777" : "#222";
+        select.style.fontWeight = empty ? "300" : "400";
     };
-
     update();
+
     select.addEventListener("change", () => {
       update();
 
       if (select.name === "State") {
         const form = select.closest("form");
         const countryField = form?.querySelector('[name="Country"]');
-        if (countryField) {
+        if (countryField && countryField.type === "hidden") {
           countryField.value = select.value ? "United States" : "";
         }
       }
+    });
+  });
+
+  //////////// COUNTRY VISIBLE - SELECT FIELD BEHAVIOR ////////////
+
+  document.querySelectorAll('form #Country:not([type="hidden"])').forEach((country) => {
+    const form = country.closest("form");
+    if (!form) return;
+
+    const state = form.querySelector("#State");
+    if (!state) return;
+
+    // Change handler
+    country.addEventListener("change", () => {
+      if (country.value === "United States") {
+        state.style.pointerEvents = "auto";
+        state.style.color = "#222";
+        state.required = true;
+      } else {
+        state.style.pointerEvents = "none";
+        state.style.color = "#aaa";
+        state.required = false;
+        state.selectedIndex = 0;
+      }
+    });
+
+    // Initial styles for country
+    country.style.color = "#777";
+    country.style.fontWeight = "300";
+
+    country.addEventListener("focus", () => {
+      country.style.color = "#222";
+      country.style.fontWeight = "400";
     });
   });
 
@@ -77,7 +110,7 @@ export function setupForms(ids) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+/*
 export function selfSchedule(formIds) {
   const forms = formIds.map((id) => document.getElementById(id)).filter(Boolean);
   if (!forms.length) return;
@@ -144,3 +177,4 @@ export function selfSchedule(formIds) {
     }
   });
 }
+  /*

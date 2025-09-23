@@ -1,8 +1,10 @@
-import { setupForms, selfSchedule } from './components/demoforms.js';
-import { successAllPages, successUSCalendly } from './pages/success.js';
+import { setupForms } from './components/forms.js';
+import { selfScheduleUS, selfScheduleSuccessUS } from './components/selfschedule.js';
+import { successAllPages } from './pages/success.js';
 
 
 console.log('rightnowmedia loaded');
+const path = window.location.pathname;
 
 
 //////////// setupForms ////////////
@@ -17,7 +19,7 @@ setupForms([
 
 //////////// selfSchedule ////////////
 
-selfSchedule([
+selfScheduleUS([
   'demoForm_US', 
   'demoForm_US_ReturningVisitor'
 ]);
@@ -26,7 +28,6 @@ selfSchedule([
 
 //////////// Success Pages ////////////
 
-const path = window.location.pathname;
 
 // run on ALL success pages
 if (path.startsWith('/us/success') || path.startsWith('/success/')) {
@@ -35,7 +36,7 @@ if (path.startsWith('/us/success') || path.startsWith('/success/')) {
 
 // run only on specific success URLs
 const SUCCESS_ROUTES = {
-  '/success/us-calendly': successUSCalendly
+  '/success/us-calendly': selfScheduleSuccessUS
 };
 
 const run = SUCCESS_ROUTES[path];
