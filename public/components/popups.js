@@ -5,8 +5,8 @@ export function setupPopups() {
   console.log("Popups worked!");
 
   document.addEventListener('DOMContentLoaded', function () {
-    const popupBox = document.querySelector('.rightnow-media--popup-container');
-    const closeButtons = document.querySelectorAll('.rightnow-media--popup-close');
+    const popupBox = document.querySelector('.popup-container');
+    const closeButtons = document.querySelectorAll('.popup-close');
   
     const FLAG_KEY = 'pastorsPopupWasClosed';
     const EXPIRY_KEY = 'pastorsPopupHidesUntil';

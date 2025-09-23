@@ -1,4 +1,5 @@
 import { setupForms, selfSchedule } from './components/demoforms.js';
+import { successAllPages, successUSCalendly } from './pages/success.js';
 
 
 console.log('rightnowmedia loaded');
@@ -6,26 +7,36 @@ console.log('rightnowmedia loaded');
 
 //////////// setupForms ////////////
 
-const setupFormIds = [
+setupForms([
   'demoForm_US',
   'demoForm_US_ReturningVisitor',
   'demoForm_US_Popup'
-];
+]);
 
-const setupTargets = setupFormIds.map(id => document.getElementById(id)).filter(Boolean);
-if (setupTargets.length > 0) {
-  setupForms();
-}
 
 
 //////////// selfSchedule ////////////
 
-const selfScheduleIds = [
-  'demoForm_US',
+selfSchedule([
+  'demoForm_US', 
   'demoForm_US_ReturningVisitor'
-];
+]);
 
-const selfScheduleTargets = selfScheduleIds.map(id => document.getElementById(id)).filter(Boolean);
-if (selfScheduleTargets.length > 0) {
-  selfSchedule(selfScheduleIds);
+
+
+//////////// Success Pages ////////////
+
+const path = window.location.pathname;
+
+// run on ALL success pages
+if (path.startsWith('/us/success') || path.startsWith('/success/')) {
+  successAllPages();
 }
+
+// run only on specific success URLs
+const SUCCESS_ROUTES = {
+  '/success/us-calendly': successUSCalendly
+};
+
+const run = SUCCESS_ROUTES[path];
+if (run) run();
