@@ -6,6 +6,7 @@ import { successAllPages } from './pages/success.js';
 console.log('rightnowmediaatwork loaded');
 const path = window.location.pathname;
 
+
 //////////// setupForms ////////////
 
 setupForms([
