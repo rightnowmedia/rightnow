@@ -38,20 +38,24 @@ function setupSelfSchedule(formIds, actionConfig) {
   window.addEventListener('pagehide', () => forms.forEach(save));
 
   /////// CAMPAIGN LOGIC ///////
+  const resolveActions = (form) =>
+    typeof actionConfig === 'function' ? actionConfig(form) : actionConfig;
+
   const updateCampaign = (form) => {
     const orgSize = form.querySelector('#Organization-Size');
     const jobTitle = form.querySelector('#Job-Title');
     if (!orgSize || !jobTitle) return;
 
+    const { default: defaultAction, special: specialAction } = resolveActions(form);
     const orgIndex = orgSize.selectedIndex;
     const jt = jobTitle.value;
 
     if (jt === "Non-Staff" || jt === "Employee") {
-      form.action = actionConfig.default;
+      form.action = defaultAction;
     } else if (orgIndex <= 2) {
-      form.action = actionConfig.special;
+      form.action = specialAction;
     } else {
-      form.action = actionConfig.default;
+      form.action = defaultAction;
     }
   };
 
@@ -63,20 +67,30 @@ function setupSelfSchedule(formIds, actionConfig) {
   });
 }
 
+form.setAttribute('data-experiment', '1');
+
 // Media US
 export function selfScheduleUS(formIds) {
-  setupSelfSchedule(formIds, {
-    default: '/default-action',
-    special: '/special-action'
-  });
+  const resolver = (form) => {
+    const id = form.id;
+    const base = `/${window.formURLS[id]}`;
+    const calendly = `/${window.formURLS[`${id}_Calendly`]}`;
+    return { default: base, special: calendly };
+  };
+
+  setupSelfSchedule(formIds, resolver);
 }
 
-// At Work US
+// At Work US (dynamic resolver using formURLS)
 export function selfScheduleAtWorkUS(formIds) {
-  setupSelfSchedule(formIds, {
-    default: '/default-action2',
-    special: '/special-action2'
-  });
+  const resolver = (form) => {
+    const id = form.id;
+    const base = `/${window.formURLS[id]}`;
+    const calendly = `/${window.formURLS[`${id}_Calendly`]}`;
+    return { default: base, special: calendly };
+  };
+
+  setupSelfSchedule(formIds, resolver);
 }
 
 
