@@ -10,7 +10,6 @@ export function successAllPages() {
 
 
   // Remove Get Access and Login Buttons
-
   document.querySelectorAll(".navigation").forEach(nav => {
     const getAccessBtn = nav.querySelector(".header-nav-get-access");
     const loginLink = nav.querySelector("#NavLink_US_Login");

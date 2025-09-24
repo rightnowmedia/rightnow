@@ -31,6 +31,8 @@ export function setupForms(ids) {
     });
   });
 
+  
+
   //////////// COUNTRY VISIBLE - SELECT FIELD BEHAVIOR ////////////
 
   document.querySelectorAll('form #Country:not([type="hidden"])').forEach((country) => {
@@ -64,8 +66,7 @@ export function setupForms(ids) {
     });
   });
 
-
-
+  
   //////////// DON'T INTERRUPT THE RV FORM ////////////
 
   document.querySelectorAll('.top-bar-form-field').forEach(function(field) {
@@ -73,7 +74,6 @@ export function setupForms(ids) {
       document.querySelector('.popup-wrap').style.display = 'none';
     });
   });
-
 
 
   //////////// GET UTM SOURCE FROM URL ////////////

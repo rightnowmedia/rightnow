@@ -1,5 +1,5 @@
 import { setupForms } from './components/forms.js';
-import { selfScheduleUS, selfScheduleSuccessUS } from './components/selfschedule.js';
+import { selfScheduleUS, selfScheduleUSSuccess } from './components/selfschedule.js';
 import { successAllPages } from './pages/success.js';
 
 
@@ -36,7 +36,7 @@ if (path.startsWith('/us/success') || path.startsWith('/success/')) {
 
 // run only on specific success URLs
 const SUCCESS_ROUTES = {
-  '/success/us-calendly': selfScheduleSuccessUS
+  '/success/us-calendly': selfScheduleUSSuccess
 };
 
 const run = SUCCESS_ROUTES[path];
