@@ -50,6 +50,8 @@ function setupSelfSchedule(formIds, actionConfig) {
     const orgIndex = orgSize.selectedIndex;
     const jt = jobTitle.value;
 
+    form.setAttribute('data-experiment', '1');
+
     if (jt === "Non-Staff" || jt === "Employee") {
       form.action = defaultAction;
     } else if (orgIndex <= 2) {
@@ -66,8 +68,6 @@ function setupSelfSchedule(formIds, actionConfig) {
     }
   });
 }
-
-form.setAttribute('data-experiment', '1');
 
 // Media US
 export function selfScheduleUS(formIds) {
