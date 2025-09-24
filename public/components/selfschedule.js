@@ -70,24 +70,26 @@ function setupSelfSchedule(formIds, actionConfig) {
   });
 }
 
+const PREFIX = "https://go.rightnowmedia.org/l/964643/";
+
 // Media US
 export function selfScheduleUS(formIds) {
   const resolver = (form) => {
     const id = form.id;
-    const base = `/${window.formURLS[id]}`;
-    const calendly = `/${window.formURLS[`${id}_Calendly`]}`;
+    const base = `${PREFIX}${window.formURLS[id]}`;
+    const calendly = `${PREFIX}${window.formURLS[`${id}_Calendly`]}`;
     return { default: base, special: calendly };
   };
 
   setupSelfSchedule(formIds, resolver);
 }
 
-// At Work US (dynamic resolver using formURLS)
+// At Work US
 export function selfScheduleAtWorkUS(formIds) {
   const resolver = (form) => {
     const id = form.id;
-    const base = `/${window.formURLS[id]}`;
-    const calendly = `/${window.formURLS[`${id}_Calendly`]}`;
+    const base = `${PREFIX}${window.formURLS[id]}`;
+    const calendly = `${PREFIX}${window.formURLS[`${id}_Calendly`]}`;
     return { default: base, special: calendly };
   };
 
