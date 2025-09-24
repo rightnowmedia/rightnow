@@ -37,6 +37,7 @@ function setupSelfSchedule(formIds, actionConfig) {
   });
   window.addEventListener('pagehide', () => forms.forEach(save));
 
+  
   /////// CAMPAIGN LOGIC ///////
   const resolveActions = (form) =>
     typeof actionConfig === 'function' ? actionConfig(form) : actionConfig;
@@ -105,13 +106,12 @@ export function selfScheduleAtWorkUS(formIds) {
 function initCalendlyWidget(baseUrl) {
   const STORAGE_KEY = 'leadInfo';
 
-  function ensureCalendlyScript() {
-    const JS_SRC = 'https://assets.calendly.com/assets/external/widget.js';
-    if (!document.querySelector(`script[src="${JS_SRC}"]`)) {
-      const s = document.createElement('script');
-      s.src = JS_SRC;
-      s.async = true;
-      document.head.appendChild(s);
+  // tiny helper: run after DOM is ready
+  function whenDOMReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      fn();
     }
   }
 
@@ -135,27 +135,32 @@ function initCalendlyWidget(baseUrl) {
 
   function initCalendly(url) {
     function go() {
+      const parentElement = document.getElementById('calendly-container');
+      if (!parentElement) return false; // wait until container exists
+
       if (window.Calendly?.initInlineWidget) {
-        window.Calendly.initInlineWidget({
-          url,
-          parentElement: document.getElementById('calendly-container')
-        });
+        // optional: clear stale content if any
+        parentElement.innerHTML = '';
+        window.Calendly.initInlineWidget({ url, parentElement });
         return true;
       }
       return false;
     }
+
     if (!go()) {
       const t = setInterval(() => go() && clearInterval(t), 50);
       setTimeout(() => clearInterval(t), 10000);
     }
   }
 
-  ensureCalendlyScript();
+  // Defer the whole thing until DOM is ready (fixes first-load race)
+  whenDOMReady(() => {
+    const data = getLead();
+    const url = buildUrl(data);
+    initCalendly(url);
+  });
 
-  const data = getLead();
-  const url = buildUrl(data);
-  initCalendly(url);
-
+  // clear lead info after booking
   window.addEventListener('message', (e) => {
     if (e.data?.event === 'calendly.event_scheduled') {
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
