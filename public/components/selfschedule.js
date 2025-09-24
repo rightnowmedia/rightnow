@@ -105,6 +105,16 @@ export function selfScheduleAtWorkUS(formIds) {
 function initCalendlyWidget(baseUrl) {
   const STORAGE_KEY = 'leadInfo';
 
+  function ensureCalendlyScript() {
+    const JS_SRC = 'https://assets.calendly.com/assets/external/widget.js';
+    if (!document.querySelector(`script[src="${JS_SRC}"]`)) {
+      const s = document.createElement('script');
+      s.src = JS_SRC;
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }
+
   function getLead() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
     catch { return {}; }
@@ -139,6 +149,8 @@ function initCalendlyWidget(baseUrl) {
       setTimeout(() => clearInterval(t), 10000);
     }
   }
+
+  ensureCalendlyScript();
 
   const data = getLead();
   const url = buildUrl(data);
