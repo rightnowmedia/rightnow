@@ -1,5 +1,6 @@
 import { setupPopups } from './components/popups.js';
 import { setupForms } from './components/forms.js';
+import { selfScheduleUS, selfSchedulePPlusUSSuccess } from './components/selfschedule.js';
 
 setupPopups();
 setupForms();
@@ -24,4 +25,3 @@ const SUCCESS_ROUTES = {
 
 const run = SUCCESS_ROUTES[path];
 if (run) run();
-
