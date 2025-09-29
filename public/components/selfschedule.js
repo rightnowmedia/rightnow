@@ -179,3 +179,8 @@ export function selfScheduleUSSuccess() {
 export function selfScheduleAtWorkUSSuccess() {
   initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
 }
+
+// Pastors+ US
+export function selfSchedulePPlusUSSuccess() {
+  initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
+}
