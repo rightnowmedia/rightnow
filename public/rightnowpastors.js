@@ -2,6 +2,8 @@ import { setupPopups } from './components/popups.js';
 import { setupForms } from './components/forms.js';
 import { selfScheduleUS, selfSchedulePPlusUSSuccess } from './components/selfschedule.js';
 
+
+
 setupPopups();
 setupForms();
 
@@ -14,6 +16,10 @@ selfScheduleUS([
 ]);
 
 
+
+//////////// Pages ////////////
+
+const path = window.location.pathname;
 
 //////////// Success Pages ////////////
 
