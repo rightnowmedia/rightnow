@@ -2,16 +2,14 @@
 
 export function setupPopups() {
 
-  console.log("Popups worked!");
+  console.log("Popups Component Active");
 
   document.addEventListener('DOMContentLoaded', function () {
-    const popupBox = document.querySelector('.popup-container');
+    const popupWrap = document.querySelector('.popup-wrap');
     const closeButtons = document.querySelectorAll('.popup-close');
   
     const FLAG_KEY = 'pastorsPopupWasClosed';
     const EXPIRY_KEY = 'pastorsPopupHidesUntil';
-  
-    const FADE_MS = 220;
   
     function getTimeXDaysFromNow(days) {
       return Date.now() + days * 24 * 60 * 60 * 1000;
@@ -28,48 +26,15 @@ export function setupPopups() {
       localStorage.setItem(expiryKey, getTimeXDaysFromNow(daysToHide).toString());
     }
   
-    if (!popupBox) return;
+    if (!popupWrap) return;
   
-    // Helper to cancel any in-flight animations
-    function cancelAnims(el) {
-      el.getAnimations?.().forEach(a => a.cancel());
+    if (hasUserExited(FLAG_KEY, EXPIRY_KEY)) {
+      popupWrap.style.display = 'none';
     }
-  
-    function fadeIn(el) {
-      cancelAnims(el);
-      el.style.display = 'flex';       // or 'block' if you prefer
-      el.style.opacity = '0';          // ensure starting point
-      el.animate(
-        [{ opacity: 0 }, { opacity: 1 }],
-        { duration: FADE_MS, easing: 'ease', fill: 'forwards' }
-      );
-    }
-  
-    function fadeOut(el, cb) {
-      cancelAnims(el);
-      const anim = el.animate(
-        [{ opacity: 1 }, { opacity: 0 }],
-        { duration: FADE_MS, easing: 'ease', fill: 'forwards' }
-      );
-      anim.onfinish = () => {
-        el.style.display = 'none';
-        if (cb) cb();
-      };
-    }
-  
-    setTimeout(() => {
-      if (hasUserExited(FLAG_KEY, EXPIRY_KEY)) {
-        popupBox.style.display = 'none';
-        popupBox.style.opacity = '0';
-      } else {
-        fadeIn(popupBox);
-      }
-    }, 15000);
   
     closeButtons.forEach((btn) =>
       btn.addEventListener('click', () => {
         rememberUserExited(FLAG_KEY, EXPIRY_KEY, 7);
-        fadeOut(popupBox);
       })
     );
   });

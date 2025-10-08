@@ -3,12 +3,11 @@ import { setupForms } from './components/forms.js';
 import { selfScheduleUS, selfSchedulePPlusUSSuccess } from './components/selfschedule.js';
 
 
-
 setupPopups();
 setupForms();
 
 
-
+/*
 //////////// selfSchedule ////////////
 
 selfScheduleUS([
@@ -17,12 +16,9 @@ selfScheduleUS([
 
 
 
-//////////// Pages ////////////
-
-const path = window.location.pathname;
-
 //////////// Success Pages ////////////
 
+const path = window.location.pathname;
 
 // run only on specific success URLs
 const SUCCESS_ROUTES = {
@@ -31,3 +27,5 @@ const SUCCESS_ROUTES = {
 
 const run = SUCCESS_ROUTES[path];
 if (run) run();
+
+*/

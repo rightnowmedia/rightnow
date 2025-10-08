@@ -1,13 +1,14 @@
+import { setupGlobal } from './components/global.js';
 import { setupForms } from './components/forms.js';
 import { selfScheduleAtWorkUS, selfScheduleAtWorkUSSuccess } from './components/selfschedule.js';
 import { successAllPages } from './pages/success.js';
 
 
 console.log('rightnowmediaatwork loaded');
-const path = window.location.pathname;
 
 
-//////////// setupForms ////////////
+setupGlobal();
+
 
 setupForms([
   'demoForm_RNMW_US',
@@ -17,16 +18,14 @@ setupForms([
 ]);
 
 
-
-//////////// selfSchedule ////////////
-
 selfScheduleAtWorkUS([
   'demoForm_RNMW_US'
 ]);
 
 
-
 //////////// Success Pages ////////////
+
+const path = window.location.pathname;
 
 // run on ALL success pages
 if (path.startsWith('/atwork/us/success') || path.startsWith('/atwork/success/success/')) {

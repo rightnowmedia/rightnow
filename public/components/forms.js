@@ -1,14 +1,15 @@
 
-
 export function setupForms(ids) {
+
+  console.log("Forms Component Active");
 
   if (Array.isArray(ids) && ids.length) {
     const found = ids.some(id => document.getElementById(id));
     if (!found) return;
   }
 
+  
   //////////// SELECT FIELD BEHAVIOR ////////////
-
 
   document.querySelectorAll("select").forEach((select) => {
     const update = () => {
@@ -31,7 +32,6 @@ export function setupForms(ids) {
     });
   });
 
-  
 
   //////////// COUNTRY VISIBLE - SELECT FIELD BEHAVIOR ////////////
 
@@ -66,20 +66,11 @@ export function setupForms(ids) {
     });
   });
 
-  
-  //////////// DON'T INTERRUPT THE RV FORM ////////////
-
-  document.querySelectorAll('.top-bar-form-field').forEach(function(field) {
-    field.addEventListener('focus', function() {
-      document.querySelector('.popup-wrap').style.display = 'none';
-    });
-  });
-
 
   //////////// GET UTM SOURCE FROM URL ////////////
 
   const params = new URLSearchParams(window.location.search);
-  const utmSource = decodeURIComponent(params.get('utm_source') || '');
+  const utmSource = decodeURIComponent(params.get('utm_source') || '').toLowerCase();
 
   const SOURCE_MAP = {
     google: 'Online Advertising: Google',
@@ -90,16 +81,17 @@ export function setupForms(ids) {
     blog: 'Blog',
     inclub: 'inclub',
     gloo: 'Gloo Advertising',
+    reddit: 'Online Advertising: Reddit',
+    outreachmagazine: 'Print Advertising',
   };
 
-  const sourceName = SOURCE_MAP[utmSource.toLowerCase()] || '';
+  let sourceName = SOURCE_MAP[utmSource] || '';
+
   if (sourceName) {
     document.querySelectorAll('#Ad-Source, [name="Ad-Source"]').forEach((field) => {
       field.value = sourceName;
     });
   }
-
-
 
 }
 
