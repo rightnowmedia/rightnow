@@ -55,7 +55,7 @@ function setupSelfSchedule(formIds, actionConfig) {
 
     if (jt === "Non-Staff" || jt === "Employee") {
       form.action = defaultAction;
-    } else if (orgIndex <= 2) {
+    } else if (orgIndex <= 1) {
       form.action = specialAction;
     } else {
       form.action = defaultAction;

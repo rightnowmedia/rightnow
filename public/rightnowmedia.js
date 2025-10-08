@@ -12,7 +12,8 @@ const path = window.location.pathname;
 setupForms([
   'demoForm_US',
   'demoForm_US_ReturningVisitor',
-  'demoForm_US_Popup'
+  'demoForm_US_Popup',
+  'demoForm_US_AdLandingPage',
 ]);
 
 
@@ -20,8 +21,8 @@ setupForms([
 //////////// selfSchedule ////////////
 
 selfScheduleUS([
-  'demoForm_US', 
-  'demoForm_US_ReturningVisitor'
+  'demoForm_US',
+  'demoForm_US_ReturningVisitor',
 ]);
 
 
