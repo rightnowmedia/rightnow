@@ -10,7 +10,7 @@ setupPopups();
 setupForms();
 
 
-/*
+
 //////////// selfSchedule ////////////
 
 selfScheduleUS([
@@ -30,5 +30,3 @@ const SUCCESS_ROUTES = {
 
 const run = SUCCESS_ROUTES[path];
 if (run) run();
-
-*/

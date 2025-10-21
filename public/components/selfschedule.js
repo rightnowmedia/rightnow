@@ -182,5 +182,5 @@ export function selfScheduleAtWorkUSSuccess() {
 
 // Pastors+ US
 export function selfSchedulePPlusUSSuccess() {
-  initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
+  initCalendlyWidget('https://calendly.com/rnmp/rnp-interest');
 }
