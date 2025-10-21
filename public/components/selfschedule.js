@@ -53,7 +53,7 @@ function setupSelfSchedule(formIds, actionConfig) {
 
     form.setAttribute('data-experiment', '1');
 
-    if (jt === "Non-Staff" || jt === "Employee") {
+    if (jt === "Non-Staff" || jt === "Employee" || jt === "Ministry Leader") {
       form.action = defaultAction;
     } else if (orgIndex <= 1) {
       form.action = specialAction;
