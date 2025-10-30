@@ -42,19 +42,19 @@ function setupSelfSchedule(formIds, actionConfig) {
     typeof actionConfig === 'function' ? actionConfig(form) : actionConfig;
 
   const updateCampaign = (form) => {
-    const orgSize = form.querySelector('#Organization-Size');
     const jobTitle = form.querySelector('#Job-Title');
-    if (!orgSize || !jobTitle) return;
+    const stateField = form.querySelector('#State');
+    if (!jobTitle || !stateField) return;
 
     const { default: defaultAction, special: specialAction, special2: specialAction2 } = resolveActions(form);
-    const orgIndex = orgSize.selectedIndex;
     const jt = jobTitle.value;
+    const selectedState = stateField.value;
 
     form.setAttribute('data-experiment', '1');
 
     if (jt === "Non-Staff" || jt === "Employee" || jt === "Ministry Leader") {
       form.action = defaultAction;
-    } else if (orgIndex <= 1) {
+    } else if (specialStates.includes(selectedState)) {
       form.action = specialAction;
     } else {
       form.action = specialAction2;
@@ -63,7 +63,7 @@ function setupSelfSchedule(formIds, actionConfig) {
 
   forms.forEach(updateCampaign);
   document.addEventListener('change', (e) => {
-    if ((e.target.id === 'Organization-Size' || e.target.id === 'Job-Title') && forms.includes(e.target.form)) {
+    if ((e.target.id === 'State' || e.target.id === 'Job-Title') && forms.includes(e.target.form)) {
       updateCampaign(e.target.form);
     }
   });

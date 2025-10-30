@@ -3,7 +3,7 @@ import { setupPopups } from './components/popups.js';
 import { setupForms } from './components/forms.js';
 import { selfScheduleUS, selfScheduleSchoolsSuccess } from './components/selfschedule_schools.js';
 
-console.log('rightnowpastors loaded');
+console.log('rightnowmedia schools loaded');
 
 setupGlobal();
 setupPopups();
@@ -26,7 +26,7 @@ const path = window.location.pathname;
 
 // run only on specific success URLs
 const SUCCESS_ROUTES = {
-  '/success/plus-us-calendly': selfScheduleSchoolsSuccess
+  '/success/us-calendly': selfScheduleSchoolsSuccess
 };
 
 const run = SUCCESS_ROUTES[path];
