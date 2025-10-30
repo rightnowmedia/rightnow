@@ -50,6 +50,12 @@ function setupSelfSchedule(formIds, actionConfig) {
     const jt = jobTitle.value;
     const selectedState = stateField.value;
 
+    const specialStates = [
+      "Alabama", "Arkansas", "Colorado", "Florida", "Georgia", "Kansas", "Kentucky",
+      "Louisiana", "Mississippi", "Missouri", "North Carolina", "Oklahoma",
+      "South Carolina", "Tennessee", "Texas", "Virginia"
+    ];
+
     form.setAttribute('data-experiment', '1');
 
     if (jt === "Non-Staff" || jt === "Employee" || jt === "Ministry Leader") {
