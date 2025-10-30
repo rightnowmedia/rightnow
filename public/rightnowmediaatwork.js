@@ -1,6 +1,6 @@
 import { setupGlobal } from './components/global.js';
 import { setupForms } from './components/forms.js';
-import { selfScheduleAtWorkUS, selfScheduleAtWorkUSSuccess } from './components/selfschedule.js';
+import { selfScheduleUS, selfScheduleAtWorkUSSuccess } from './components/selfschedule_atwork.js';
 import { successAllPages } from './pages/success.js';
 
 
@@ -18,7 +18,7 @@ setupForms([
 ]);
 
 
-selfScheduleAtWorkUS([
+selfScheduleUS([
   'demoForm_RNMW_US'
 ]);
 

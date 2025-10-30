@@ -52,9 +52,11 @@ function setupSelfSchedule(formIds, actionConfig) {
 
     form.setAttribute('data-experiment', '1');
 
-    if (jt === "Non-Staff" || jt === "Employee" || jt === "Ministry Leader") {
+    if (jt === "Employee") {
       form.action = defaultAction;
     } else if (orgIndex <= 1) {
+      form.action = defaultAction;
+    } else if (orgIndex === 2) {
       form.action = specialAction;
     } else {
       form.action = defaultAction;
@@ -156,12 +158,7 @@ function initCalendlyWidget(baseUrl) {
   });
 }
 
-// Media US
-export function selfScheduleUSSuccess() {
+// At Work US
+export function selfScheduleAtWorkUSSuccess() {
   initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
-}
-
-// Pastors+ US
-export function selfSchedulePPlusUSSuccess() {
-  initCalendlyWidget('https://calendly.com/rnmp/pastorsplus');
 }

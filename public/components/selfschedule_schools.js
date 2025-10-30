@@ -46,7 +46,7 @@ function setupSelfSchedule(formIds, actionConfig) {
     const jobTitle = form.querySelector('#Job-Title');
     if (!orgSize || !jobTitle) return;
 
-    const { default: defaultAction, special: specialAction } = resolveActions(form);
+    const { default: defaultAction, special: specialAction, special2: specialAction2 } = resolveActions(form);
     const orgIndex = orgSize.selectedIndex;
     const jt = jobTitle.value;
 
@@ -57,7 +57,7 @@ function setupSelfSchedule(formIds, actionConfig) {
     } else if (orgIndex <= 1) {
       form.action = specialAction;
     } else {
-      form.action = defaultAction;
+      form.action = specialAction2;
     }
   };
 
@@ -77,7 +77,8 @@ export function selfScheduleUS(formIds) {
     const id = form.id;
     const base = `${PREFIX}${window.formURLS[id]}`;
     const calendly = `${PREFIX}${window.formURLS[`${id}_Calendly`]}`;
-    return { default: base, special: calendly };
+    const calendly2 = `${PREFIX}${window.formURLS[`${id}_Calendly2`]}`;
+    return { default: base, special: calendly, special2: calendly2 };
   };
 
   setupSelfSchedule(formIds, resolver);
@@ -156,12 +157,7 @@ function initCalendlyWidget(baseUrl) {
   });
 }
 
-// Media US
-export function selfScheduleUSSuccess() {
+// Calendly Success Page
+export function selfScheduleSchoolsSuccess() {
   initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
-}
-
-// Pastors+ US
-export function selfSchedulePPlusUSSuccess() {
-  initCalendlyWidget('https://calendly.com/rnmp/pastorsplus');
 }
