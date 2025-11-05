@@ -158,7 +158,7 @@ function initCalendlyWidget(baseUrl) {
 
 // Media US
 export function selfScheduleUSSuccess() {
-  initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
+  initCalendlyWidget('https://calendly.com/rightnowmedia/rnm-demonstration');
 }
 
 // Pastors+ US

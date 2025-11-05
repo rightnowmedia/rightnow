@@ -160,5 +160,5 @@ function initCalendlyWidget(baseUrl) {
 
 // At Work US
 export function selfScheduleAtWorkUSSuccess() {
-  initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
+  initCalendlyWidget('https://calendly.com/rightnowmedia/rnmw-demonstration');
 }
