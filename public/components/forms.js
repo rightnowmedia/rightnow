@@ -117,7 +117,7 @@ export function setupForms(ids) {
   // Do not change callback name, must match reCAPTCHA script callback
   window.CaptchaCallback = function () {
     document.querySelectorAll('form').forEach((form, index) => {
-      const recaptchaEl = form.querySelector('.recaptcha-box');
+      const recaptchaEl = form.querySelector('.recaptcha-webtolead');
       if (!recaptchaEl) return;
 
       const submitBtn = form.querySelector('[type="submit"]');
