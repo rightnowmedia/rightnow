@@ -3,10 +3,15 @@ export function setupForms(ids) {
 
   console.log("Forms Component Active");
 
+  // If specific IDs were provided, honor that first
   if (Array.isArray(ids) && ids.length) {
     const found = ids.some(id => document.getElementById(id));
     if (!found) return;
   }
+
+  // Stop if no forms at all
+  const forms = Array.from(document.querySelectorAll('form'));
+  if (!forms.length) return;
 
   
   //////////// SELECT FIELD BEHAVIOR ////////////
@@ -22,9 +27,9 @@ export function setupForms(ids) {
     select.addEventListener("change", () => {
       update();
 
-      if (select.name === "State") {
+      if (select.name && (select.name === "State" || select.name === "state")) {
         const form = select.closest("form");
-        const countryField = form?.querySelector('[name="Country"]');
+        const countryField = form?.querySelector('[name="Country"], [name="country"]');
         if (countryField && countryField.type === "hidden") {
           countryField.value = select.value ? "United States" : "";
         }
@@ -70,7 +75,14 @@ export function setupForms(ids) {
   //////////// GET UTM SOURCE FROM URL ////////////
 
   const params = new URLSearchParams(window.location.search);
-  const utmSource = decodeURIComponent(params.get('utm_source') || '').toLowerCase();
+  let utmSource = (params.get('utm_source') || '').toLowerCase();
+
+  // Save UTM source for future pages
+  if (utmSource) {
+    localStorage.setItem('utm_source', utmSource);
+  } else {
+    utmSource = localStorage.getItem('utm_source') || '';
+  }
 
   const SOURCE_MAP = {
     google: 'Online Advertising: Google',
@@ -88,10 +100,93 @@ export function setupForms(ids) {
   let sourceName = SOURCE_MAP[utmSource] || '';
 
   if (sourceName) {
-    document.querySelectorAll('#Ad-Source, [name="Ad-Source"]').forEach((field) => {
+    document.querySelectorAll('#Ad-Source, [name="00N6A00000NUjJQ"]').forEach((field) => {
       field.value = sourceName;
     });
   }
 
-}
+  
+  //////////// RECAPTCHA WEBTOLEAD SETUP ////////////
 
+  const SITE_KEY = window.SITE_KEY || '';
+  if (!SITE_KEY) { 
+    console.warn('reCAPTCHA SITE_KEY not found on the page');
+    return;
+  }
+
+  // Do not change callback name, must match reCAPTCHA script callback
+  window.CaptchaCallback = function () {
+    document.querySelectorAll('form').forEach((form, index) => {
+      const recaptchaEl = form.querySelector('.recaptcha-box');
+      if (!recaptchaEl) return;
+
+      const submitBtn = form.querySelector('[type="submit"]');
+      if (!submitBtn) return;
+
+      if (!recaptchaEl.id) {
+        recaptchaEl.id = `recaptcha_${index}`;
+      }
+
+      const widgetId = grecaptcha.render(recaptchaEl.id, {
+        sitekey: SITE_KEY,
+        callback: update,
+        'expired-callback': update,
+        'error-callback': update
+      });
+
+      function valid() {
+        return form.checkValidity();
+      }
+
+      function solved() {
+        return grecaptcha.getResponse(widgetId).length > 0;
+      }
+
+      function update() {
+        const disable = valid() ? !solved() : false;
+        const opacity = disable ? '0.6' : '1';
+
+        submitBtn.disabled = disable;
+        submitBtn.style.opacity = opacity;
+
+        const btnParent = submitBtn.closest('.btn');
+        if (btnParent) btnParent.style.opacity = opacity;
+      }
+
+      form.addEventListener('input', update);
+      form.addEventListener('change', update);
+      form.addEventListener('submit', (e) => {
+        if (valid() && !solved()) {
+          e.preventDefault();
+          submitBtn.disabled = true;
+        }
+      });
+
+      update();
+    });
+  };
+
+
+  //////////// RECAPTCHA WEBTOLEAD SALESFORCE TIMESTAMP ////////////
+
+  function timestamp() {
+    var settings = document.getElementsByName("captcha_settings");
+    if (!settings.length) return;
+
+    for (var i = 0; i < settings.length; i++) {
+      var responseId = (i === 0)
+        ? "g-recaptcha-response"
+        : "g-recaptcha-response-" + i;
+
+      var response = document.getElementById(responseId);
+
+      if (response == null || response.value.trim() === "") {
+        var elems = JSON.parse(settings[i].value);
+        elems["ts"] = JSON.stringify(new Date().getTime());
+        settings[i].value = JSON.stringify(elems);
+      }
+    }
+  }
+  setInterval(timestamp, 500);
+
+}

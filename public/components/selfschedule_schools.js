@@ -167,3 +167,7 @@ function initCalendlyWidget(baseUrl) {
 export function selfScheduleSchoolsSuccess() {
   initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
 }
+
+export function selfScheduleSchoolsSuccess2() {
+  initCalendlyWidget('https://calendly.com/angeloterminel/sample-30min');
+}

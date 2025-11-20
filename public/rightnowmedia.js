@@ -4,7 +4,6 @@ import { successAllPages } from './pages/success.js';
 
 
 console.log('rightnowmedia loaded');
-const path = window.location.pathname;
 
 
 //////////// setupForms ////////////
@@ -17,7 +16,6 @@ setupForms([
 ]);
 
 
-
 //////////// selfSchedule ////////////
 
 selfScheduleUS([
@@ -26,19 +24,11 @@ selfScheduleUS([
 ]);
 
 
-
 //////////// Success Pages ////////////
 
+const path = window.location.pathname;
 
 // run on ALL success pages
 if (path.startsWith('/us/success') || path.startsWith('/success/')) {
   successAllPages();
 }
-
-// run only on specific success URLs
-const SUCCESS_ROUTES = {
-  '/success/us-calendly': selfScheduleUSSuccess
-};
-
-const run = SUCCESS_ROUTES[path];
-if (run) run();
