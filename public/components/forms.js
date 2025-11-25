@@ -75,13 +75,47 @@ export function setupForms(ids) {
   //////////// GET UTM SOURCE FROM URL ////////////
 
   const params = new URLSearchParams(window.location.search);
-  let utmSource = (params.get('utm_source') || '').toLowerCase();
+  const utmSourceFromUrl = (params.get('utm_source') || '').toLowerCase();
 
-  // Save UTM source for future pages
-  if (utmSource) {
-    localStorage.setItem('utm_source', utmSource);
-  } else {
-    utmSource = localStorage.getItem('utm_source') || '';
+  const TTL = 1000 * 60 * 60 * 24 * 7;
+  const LOW_PRIORITY = ['email', 'blog'];
+
+  // Read stored record (new format only: { value, expires })
+  let stored = null;
+  try {
+    const raw = localStorage.getItem('utm_source');
+    if (raw) {
+      stored = JSON.parse(raw);
+    }
+  } catch (e) {
+    stored = null;
+  }
+
+  if (stored && stored.expires && stored.expires < Date.now()) {
+    stored = null;
+  }
+
+  const storedValue = stored && stored.value ? stored.value.toLowerCase() : '';
+
+  // URL UTM wins if present, otherwise fall back to stored
+  const effectiveSource = utmSourceFromUrl || storedValue;
+
+  // Save UTM to localStorage, but low-priority UTM will not overwrite
+  if (utmSourceFromUrl) {
+    const isNewLow = LOW_PRIORITY.includes(utmSourceFromUrl);
+    const isStoredHigh = storedValue && !LOW_PRIORITY.includes(storedValue);
+
+    if (!isNewLow || !isStoredHigh) {
+      try {
+        localStorage.setItem(
+          'utm_source',
+          JSON.stringify({
+            value: utmSourceFromUrl,
+            expires: Date.now() + TTL,
+          })
+        );
+      } catch (e) { }
+    }
   }
 
   const SOURCE_MAP = {
@@ -97,7 +131,7 @@ export function setupForms(ids) {
     outreachmagazine: 'Print Advertising',
   };
 
-  let sourceName = SOURCE_MAP[utmSource] || '';
+  const sourceName = SOURCE_MAP[effectiveSource] || '';
 
   if (sourceName) {
     document.querySelectorAll('#Ad-Source, [name="00N6A00000NUjJQ"]').forEach((field) => {
@@ -109,62 +143,65 @@ export function setupForms(ids) {
   //////////// RECAPTCHA WEBTOLEAD SETUP ////////////
 
   const SITE_KEY = window.SITE_KEY || '';
-  if (!SITE_KEY) { 
+  if (!SITE_KEY) {
     console.warn('reCAPTCHA SITE_KEY not found on the page');
-    return;
-  }
+    
+    window.runFormsRecaptcha = function () {
+      // Do nothing
+    };
+  } else {
+    // Do not change callback name, must match reCAPTCHA script callback
+    window.runFormsRecaptcha = function () {
+      document.querySelectorAll('form').forEach((form, index) => {
+        const recaptchaEl = form.querySelector('.recaptcha-webtolead');
+        if (!recaptchaEl) return;
 
-  // Do not change callback name, must match reCAPTCHA script callback
-  window.CaptchaCallback = function () {
-    document.querySelectorAll('form').forEach((form, index) => {
-      const recaptchaEl = form.querySelector('.recaptcha-webtolead');
-      if (!recaptchaEl) return;
+        const submitBtn = form.querySelector('[type="submit"]');
+        if (!submitBtn) return;
 
-      const submitBtn = form.querySelector('[type="submit"]');
-      if (!submitBtn) return;
-
-      if (!recaptchaEl.id) {
-        recaptchaEl.id = `recaptcha_${index}`;
-      }
-
-      const widgetId = grecaptcha.render(recaptchaEl.id, {
-        sitekey: SITE_KEY,
-        callback: update,
-        'expired-callback': update,
-        'error-callback': update
-      });
-
-      function valid() {
-        return form.checkValidity();
-      }
-
-      function solved() {
-        return grecaptcha.getResponse(widgetId).length > 0;
-      }
-
-      function update() {
-        const disable = valid() ? !solved() : false;
-        const opacity = disable ? '0.6' : '1';
-
-        submitBtn.disabled = disable;
-        submitBtn.style.opacity = opacity;
-
-        const btnParent = submitBtn.closest('.btn');
-        if (btnParent) btnParent.style.opacity = opacity;
-      }
-
-      form.addEventListener('input', update);
-      form.addEventListener('change', update);
-      form.addEventListener('submit', (e) => {
-        if (valid() && !solved()) {
-          e.preventDefault();
-          submitBtn.disabled = true;
+        if (!recaptchaEl.id) {
+          recaptchaEl.id = `recaptcha_${index}`;
         }
-      });
 
-      update();
-    });
-  };
+        const widgetId = grecaptcha.render(recaptchaEl.id, {
+          sitekey: SITE_KEY,
+          callback: update,
+          'expired-callback': update,
+          'error-callback': update
+        });
+
+        function valid() {
+          return form.checkValidity();
+        }
+
+        function solved() {
+          return grecaptcha.getResponse(widgetId).length > 0;
+        }
+
+        function update() {
+          const disable = valid() ? !solved() : false;
+          const opacity = disable ? '0.6' : '1';
+
+          submitBtn.disabled = disable;
+          submitBtn.style.opacity = opacity;
+
+          const btnParent = submitBtn.closest('.btn');
+          if (btnParent) btnParent.style.opacity = opacity;
+        }
+
+        form.addEventListener('input', update);
+        form.addEventListener('change', update);
+        form.addEventListener('submit', (e) => {
+          if (valid() && !solved()) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+          }
+        });
+
+        update();
+      });
+    };
+  }
 
 
   //////////// RECAPTCHA WEBTOLEAD SALESFORCE TIMESTAMP ////////////

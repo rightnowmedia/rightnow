@@ -152,13 +152,8 @@ function setupCalendlyPrefill() {
   const widget = document.querySelector(".calendly-inline-widget");
   if (!widget) return;
 
-  const isVisible = (el) => {
-    return !!(
-      el.offsetWidth ||
-      el.offsetHeight ||
-      el.getClientRects().length
-    );
-  };
+  const isVisible = (el) =>
+    !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
   if (!isVisible(widget)) return;
 
   // --- Calendly prefill logic ---
@@ -174,19 +169,20 @@ function setupCalendlyPrefill() {
   try {
     urlObj = new URL(originalUrl);
   } catch {
-    // data-url isn't a valid URL, bail out safely
     return;
   }
 
   // Extract just the base Calendly URL (strip existing query params)
   const baseUrl = `${urlObj.origin}${urlObj.pathname}`;
 
-  const calendlyParams = new URLSearchParams();
-  if (name)  calendlyParams.set("name", name);
-  if (email) calendlyParams.set("email", email);
+  const parts = [];
+  if (name)  parts.push(`name=${encodeURIComponent(name)}`);
+  if (email) parts.push(`email=${encodeURIComponent(email)}`);
 
-  const calendlyUrl = calendlyParams.toString()
-    ? `${baseUrl}?${calendlyParams.toString()}`
+  const queryString = parts.join("&");
+
+  const calendlyUrl = queryString
+    ? `${baseUrl}?${queryString}`
     : baseUrl;
 
   widget.setAttribute("data-url", calendlyUrl);
