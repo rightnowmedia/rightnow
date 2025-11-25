@@ -142,66 +142,56 @@ export function setupForms(ids) {
   
   //////////// RECAPTCHA WEBTOLEAD SETUP ////////////
 
-  const SITE_KEY = window.SITE_KEY || '';
-  if (!SITE_KEY) {
-    console.warn('reCAPTCHA SITE_KEY not found on the page');
-    
-    window.runFormsRecaptcha = function () {
-      // Do nothing
-    };
-  } else {
-    // Do not change callback name, must match reCAPTCHA script callback
-    window.runFormsRecaptcha = function () {
-      document.querySelectorAll('form').forEach((form, index) => {
-        const recaptchaEl = form.querySelector('.recaptcha-webtolead');
-        if (!recaptchaEl) return;
+  window.runFormsRecaptcha = function () {
+    document.querySelectorAll('form').forEach((form, index) => {
+      const recaptchaEl = form.querySelector('.recaptcha-webtolead');
+      if (!recaptchaEl) return;
 
-        const submitBtn = form.querySelector('[type="submit"]');
-        if (!submitBtn) return;
+      const submitBtn = form.querySelector('[type="submit"]');
+      if (!submitBtn) return;
 
-        if (!recaptchaEl.id) {
-          recaptchaEl.id = `recaptcha_${index}`;
-        }
+      if (!recaptchaEl.id) {
+        recaptchaEl.id = `recaptcha_${index}`;
+      }
 
-        const widgetId = grecaptcha.render(recaptchaEl.id, {
-          sitekey: SITE_KEY,
-          callback: update,
-          'expired-callback': update,
-          'error-callback': update
-        });
-
-        function valid() {
-          return form.checkValidity();
-        }
-
-        function solved() {
-          return grecaptcha.getResponse(widgetId).length > 0;
-        }
-
-        function update() {
-          const disable = valid() ? !solved() : false;
-          const opacity = disable ? '0.6' : '1';
-
-          submitBtn.disabled = disable;
-          submitBtn.style.opacity = opacity;
-
-          const btnParent = submitBtn.closest('.btn');
-          if (btnParent) btnParent.style.opacity = opacity;
-        }
-
-        form.addEventListener('input', update);
-        form.addEventListener('change', update);
-        form.addEventListener('submit', (e) => {
-          if (valid() && !solved()) {
-            e.preventDefault();
-            submitBtn.disabled = true;
-          }
-        });
-
-        update();
+      const widgetId = grecaptcha.render(recaptchaEl.id, {
+        sitekey: window.SITE_KEY,
+        callback: update,
+        'expired-callback': update,
+        'error-callback': update
       });
-    };
-  }
+
+      function valid() {
+        return form.checkValidity();
+      }
+
+      function solved() {
+        return grecaptcha.getResponse(widgetId).length > 0;
+      }
+
+      function update() {
+        const disable = valid() ? !solved() : false;
+        const opacity = disable ? '0.6' : '1';
+
+        submitBtn.disabled = disable;
+        submitBtn.style.opacity = opacity;
+
+        const btnParent = submitBtn.closest('.btn');
+        if (btnParent) btnParent.style.opacity = opacity;
+      }
+
+      form.addEventListener('input', update);
+      form.addEventListener('change', update);
+      form.addEventListener('submit', (e) => {
+        if (valid() && !solved()) {
+          e.preventDefault();
+          submitBtn.disabled = true;
+        }
+      });
+
+      update();
+    });
+  };
 
 
   //////////// RECAPTCHA WEBTOLEAD SALESFORCE TIMESTAMP ////////////
