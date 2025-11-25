@@ -15,6 +15,8 @@ setupForms([
   'demoForm_US_AdLandingPage',
 ]);
 
+window.SITE_KEY = '6LdPWMcZAAAAALtEscbLvEVe8uX_Ks9GQJEsf9cz';
+window.CaptchaCallback = runFormsRecaptcha;
 
 //////////// selfSchedule ////////////
 
