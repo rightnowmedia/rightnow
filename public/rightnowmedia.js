@@ -16,9 +16,9 @@ setupForms([
 ]);
 
 window.SITE_KEY = '6LdPWMcZAAAAALtEscbLvEVe8uX_Ks9GQJEsf9cz';
-window.CaptchaCallbackWebtoLead = function () { runFormsRecaptcha(); };
+window.CaptchaCallback = function () { runFormsRecaptcha(); };
 const script = document.createElement("script");
-script.src = "https://www.google.com/recaptcha/api.js?onload=CaptchaCallbacWebtoLead&render=explicit";
+script.src = "https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit";
 script.async = true;
 script.defer = true;
 document.head.appendChild(script);
