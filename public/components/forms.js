@@ -153,8 +153,9 @@ export function setupForms(ids) {
       recaptchaEl.id = `recaptcha_${index}`;
     }
 
+    let widgetId = null;
     window.CaptchaCallbacks.push(function() {
-      const widgetId = grecaptcha.render(recaptchaEl.id, {
+      widgetId = grecaptcha.render(recaptchaEl.id, {
         sitekey: window.SITE_KEY,
         callback: update,
         'expired-callback': update,

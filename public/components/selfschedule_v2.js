@@ -1,6 +1,13 @@
 ////////////// Self-Schedule //////////////
 
-// Site-specific range configuration
+// Form Requirements:
+// *Must be Web-to-Lead
+// *Needs .selfschedule-configuration class
+// *Needs Title field
+// *Needs Organization Size field
+
+
+// Site-specific Org Size range configuration
 const RANGE_CONFIG = {
   // Default
   default: [
@@ -23,7 +30,6 @@ const RANGE_CONFIG = {
   ],
 };
 
-// Helper to map org size -> bucket using a rule set
 function getBucketFromRanges(index, rules) {
   if (!Number.isFinite(index) || index <= 0) return 'default';
   for (const r of rules) {

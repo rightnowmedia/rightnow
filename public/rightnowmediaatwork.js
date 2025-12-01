@@ -1,5 +1,6 @@
 import { setupGlobal } from './components/global.js';
 import { setupForms } from './components/forms.js';
+import { selfScheduleUS } from './components/selfschedule_v2.js';
 
 
 console.log('rightnowmediaatwork loaded');
@@ -12,3 +13,5 @@ setupForms([
   'demoForm_RNMW_US_Popup',
   'demoForm_RNMW_US_Pricing'
 ]);
+
+selfScheduleUS();
