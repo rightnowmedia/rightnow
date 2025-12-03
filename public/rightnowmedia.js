@@ -1,12 +1,11 @@
+import { setupGlobal } from './components/global.js';
 import { setupForms } from './components/forms.js';
-import { selfScheduleUS, selfScheduleUSSuccess } from './components/selfschedule.js';
+import { selfScheduleUS } from './components/selfschedule_v2.js';
 import { successAllPages } from './pages/success.js';
-
 
 console.log('rightnowmedia loaded');
 
-
-//////////// setupForms ////////////
+setupGlobal();
 
 setupForms([
   'demoForm_US',
@@ -15,14 +14,7 @@ setupForms([
   'demoForm_US_AdLandingPage',
 ]);
 
-
-
-//////////// selfSchedule ////////////
-
-selfScheduleUS([
-  'demoForm_US',
-  'demoForm_US_ReturningVisitor',
-]);
+selfScheduleUS();
 
 
 //////////// Success Pages ////////////
