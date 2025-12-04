@@ -11,7 +11,8 @@ setupForms([
   'demoForm_RNMW_US',
   'demoForm_RNMW_US_Home',
   'demoForm_RNMW_US_Popup',
-  'demoForm_RNMW_US_Pricing'
+  'demoForm_RNMW_US_Pricing',
+  'demoForm_RNMW_US_AdLandingPage',
 ]);
 
 selfScheduleUS();

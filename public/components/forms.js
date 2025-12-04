@@ -129,6 +129,12 @@ export function setupForms(ids) {
     gloo: 'Gloo Advertising',
     reddit: 'Online Advertising: Reddit',
     outreachmagazine: 'Print Advertising',
+    rightnowmedia: 'Cross-Site: RightNow Media',
+    rightnowmediaatwork: 'Cross-Site: RightNow Media At Work',
+    rightnowmediaschools: 'Cross-Site: RightNow Media Schools',
+    rightnowpastors: 'Cross-Site: RightNow Pastors',
+    rightnowpastorsplus: 'Cross-Site: RightNow Pastors+',
+    rightnowkids: 'Cross-Site: RightNow Kids',
   };
 
   const sourceName = SOURCE_MAP[effectiveSource] || '';
