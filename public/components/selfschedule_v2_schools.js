@@ -54,6 +54,7 @@ function setupSelfSchedule() {
       returl: {
         default: text('.selfschedule-returl-default'),
         one:     text('.selfschedule-returl-1'),
+        two:     text('.selfschedule-returl-2'),
       },
     };
   };
@@ -77,7 +78,7 @@ function setupSelfSchedule() {
     } else {
       if (stateEl) {
         const stateValue = stateEl.value;
-        bucket = BUCKET_ONE_STATES.has(stateValue) ? 'one' : 'default';
+        bucket = BUCKET_ONE_STATES.has(stateValue) ? 'one' : 'two';
       } else {
         bucket = 'default';
       }
