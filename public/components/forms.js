@@ -38,40 +38,6 @@ export function setupForms(ids) {
   });
 
 
-  //////////// COUNTRY VISIBLE - SELECT FIELD BEHAVIOR ////////////
-
-  document.querySelectorAll('form #Country:not([type="hidden"])').forEach((country) => {
-    const form = country.closest("form");
-    if (!form) return;
-
-    const state = form.querySelector("#State");
-    if (!state) return;
-
-    // Change handler
-    country.addEventListener("change", () => {
-      if (country.value === "United States") {
-        state.style.pointerEvents = "auto";
-        state.style.color = "#222";
-        state.required = true;
-      } else {
-        state.style.pointerEvents = "none";
-        state.style.color = "#aaa";
-        state.required = false;
-        state.selectedIndex = 0;
-      }
-    });
-
-    // Initial styles for country
-    country.style.color = "#777";
-    country.style.fontWeight = "300";
-
-    country.addEventListener("focus", () => {
-      country.style.color = "#222";
-      country.style.fontWeight = "400";
-    });
-  });
-
-
   //////////// GET UTM SOURCE FROM URL ////////////
 
   const params = new URLSearchParams(window.location.search);
@@ -146,7 +112,7 @@ export function setupForms(ids) {
   }
 
   
-  ////////////// RECAPTCHA WEBTOLEAD SETUP ////////////
+  ////////////// WEBTOLEAD RECAPTCHA SETUP ////////////
 
   // Helper: register a reCAPTCHA render callback safely
   function registerCaptchaCallback(fn) {
@@ -218,7 +184,7 @@ export function setupForms(ids) {
   });
 
 
-  //////////// RECAPTCHA WEBTOLEAD SALESFORCE TIMESTAMP ////////////
+  //////////// WEBTOLEAD RECAPTCHA SALESFORCE TIMESTAMP ////////////
 
   function timestamp() {
     var settings = document.getElementsByName("captcha_settings");

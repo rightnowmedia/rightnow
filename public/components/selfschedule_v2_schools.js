@@ -1,51 +1,17 @@
+
 ////////////// Self-Schedule //////////////
 
 // Form Requirements:
 // *Must be Web-to-Lead
 // *Needs .selfschedule-configuration class
 // *Needs Title field
-// *Needs Organization Size field
+// *Needs State field
 
-
-// Site-specific Org Size range configuration
-const RANGE_CONFIG = {
-  // Default
-  default: [
-    { min: 1,      max: 750,      bucket: 'one'   },
-    { min: 751,    max: 10000,    bucket: 'two'   },
-    { min: 10001,  max: Infinity, bucket: 'three' },
-  ],
-
-  // demoForm_US* 
-  us: [
-    { min: 1,      max: 750,      bucket: 'one'   },
-    { min: 751,    max: Infinity,    bucket: 'two'   },
-  ],
-
-  // demoForm_RNMW*
-  rnwm: [
-    { min: 1,   max: 5,       bucket: 'one'   },
-    { min: 6,   max: 99,      bucket: 'two'   },
-    { min: 100, max: Infinity, bucket: 'three' },
-  ],
-};
-
-function getBucketFromRanges(index, rules) {
-  if (!Number.isFinite(index) || index <= 0) return 'default';
-  for (const r of rules) {
-    if (index >= r.min && index <= r.max) return r.bucket;
-  }
-  return 'default';
-}
-
-// Decide which site's rules to use based on form ID
-function getSiteKey(form) {
-  const id = form.id || '';
-  if (id.startsWith('demoForm_US')) return 'us';
-  if (id.startsWith('demoForm_RNMW')) return 'rnwm';
-  if (id.startsWith('demoForm_PastorsPlus')) return 'pastorsplus';
-  return 'default';
-}
+const BUCKET_ONE_STATES = new Set([
+  "Alabama", "Arkansas", "Colorado", "Florida", "Georgia", "Kansas", "Kentucky",
+  "Louisiana", "Mississippi", "Missouri", "North Carolina", "Oklahoma",
+  "South Carolina", "Tennessee", "Texas", "Virginia"
+]);
 
 function setupSelfSchedule() {
   // Automatically find all forms that have .selfschedule-configuration
@@ -88,51 +54,34 @@ function setupSelfSchedule() {
       returl: {
         default: text('.selfschedule-returl-default'),
         one:     text('.selfschedule-returl-1'),
-        two:     text('.selfschedule-returl-2'),
-        three:   text('.selfschedule-returl-3'),
       },
     };
   };
 
   function updateRetUrl(form) {
-  const cfgRoot = form.querySelector('.selfschedule-configuration');
-  if (!cfgRoot) return;
+    const cfgRoot = form.querySelector('.selfschedule-configuration');
+    if (!cfgRoot) return;
 
-  const config = readConfig(form);
+    const config = readConfig(form);
 
-  const orgSize  = qs(form, '#employees');
-  const jobTitle = qs(form, '#title');
-  const stateEl  = qs(form, '#state');
-  if (!jobTitle) return;
+    const stateEl  = qs(form, '#state');
+    const jobTitle = qs(form, '#title');
+    if (!jobTitle) return;
 
-  const jt      = jobTitle.value;
-  const stateValue = stateEl ? stateEl.value : '';
-  const siteKey = getSiteKey(form);
-  const rules   = RANGE_CONFIG[siteKey] || RANGE_CONFIG.default;
+    const jt = jobTitle.value;
 
-  let bucket;
+    let bucket;
 
-  if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Ministry Leader') {
-    bucket = 'default';
-  } else if (stateValue === '') {
-    bucket = 'default';
-  } else {
-    if (!orgSize) {
-      bucket = 'one';
+    if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Ministry Leader') {
+      bucket = 'default';
     } else {
-      // Org size exists
-      const value = orgSize.value.trim();
-      const hasValue = value !== '';
-
-      if (hasValue) {
-        const index = Number(value);
-        bucket = getBucketFromRanges(index, rules);
+      if (stateEl) {
+        const stateValue = stateEl.value;
+        bucket = BUCKET_ONE_STATES.has(stateValue) ? 'one' : 'default';
       } else {
-        // field exists but is empty
         bucket = 'default';
       }
     }
-  }
 
     const successBase = config.returl[bucket];
     const retUrlEl   = qs(form, '#retURL') || qs(form, '[name="retURL"]');
@@ -143,7 +92,7 @@ function setupSelfSchedule() {
 
   document.addEventListener('change', (e) => {
     if (!forms.includes(e.target?.form)) return;
-    if (e.target.id === 'employees' || e.target.id === 'title' || e.target.id === 'state') {
+    if (e.target.id === 'state' || e.target.id === 'title') {
       updateRetUrl(e.target.form);
     }
   });
