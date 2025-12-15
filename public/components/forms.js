@@ -14,27 +14,21 @@ export function setupForms(ids) {
   if (!forms.length) return;
 
   
-  //////////// SELECT FIELD BEHAVIOR ////////////
+  //////////// STATE FIELD BEHAVIOR ////////////
 
-  document.querySelectorAll("select").forEach((select) => {
-    const update = () => {
-      const empty = select.value === "";
-        select.style.color = empty ? "#777" : "#222";
-        select.style.fontWeight = empty ? "300" : "400";
-    };
-    update();
+  document.querySelectorAll("form").forEach((form) => {
+    const stateSelect = form.querySelector( 'select[name="State"], select[name="state"]' );
+    if (!stateSelect) return;
+    stateSelect.required = true;
 
-    select.addEventListener("change", () => {
-      update();
-
-      if (select.name && (select.name === "State" || select.name === "state")) {
-        const form = select.closest("form");
-        const countryField = form?.querySelector('[name="Country"], [name="country"]');
-        if (countryField && countryField.type === "hidden") {
-          countryField.value = select.value ? "United States" : "";
-        }
+    stateSelect.addEventListener("change", () => {
+      stateSelect.required = false;
+      const countryField = form.querySelector( '[name="Country"], [name="country"]' );
+      if (countryField && countryField.type === "hidden") {
+        countryField.value = stateSelect.value ? "United States" : "";
       }
     });
+    
   });
 
 
@@ -63,10 +57,9 @@ export function setupForms(ids) {
 
   const storedValue = stored && stored.value ? stored.value.toLowerCase() : '';
 
-  // URL UTM wins if present, otherwise fall back to stored
+  // URL UTM is prioirty if present, otherwise fall back to stored
   const effectiveSource = utmSourceFromUrl || storedValue;
 
-  // Save UTM to localStorage, but low-priority UTM will not overwrite
   if (utmSourceFromUrl) {
     const isNewLow = LOW_PRIORITY.includes(utmSourceFromUrl);
     const isStoredHigh = storedValue && !LOW_PRIORITY.includes(storedValue);
@@ -114,7 +107,6 @@ export function setupForms(ids) {
   
   ////////////// WEBTOLEAD RECAPTCHA SETUP ////////////
 
-  // Helper: register a reCAPTCHA render callback safely
   function registerCaptchaCallback(fn) {
     window.CaptchaCallbacks = window.CaptchaCallbacks || [];
 
