@@ -12,6 +12,7 @@ setupForms([
   'demoForm_US_ReturningVisitor',
   'demoForm_US_Popup',
   'demoForm_US_AdLandingPage',
+  'demoForm_UK',
 ]);
 
 selfScheduleUS();
