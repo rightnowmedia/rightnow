@@ -103,7 +103,7 @@ function setupSelfSchedule() {
     const jobTitle = qs(form, '#title');
     const orgSize  = qs(form, '#employees');
     const state  = qs(form, '#state');
-    const subscriber = qs(form, '#00N2K00000CWQVv') || qs(form, '[name="00N2K00000CWQVv"]');
+    const subscriber = qs(form, '[name="00N2K00000CWQVv"]')
 
     if (!jobTitle) return;
 
@@ -154,7 +154,6 @@ function setupSelfSchedule() {
       e.target.id === 'employees' ||
       e.target.id === 'title' ||
       e.target.id === 'state' ||
-      e.target.id === '00N2K00000CWQVv' ||
       e.target.name === '00N2K00000CWQVv'
     ) {
       updateRetUrl(e.target.form);
