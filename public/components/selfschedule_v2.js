@@ -95,44 +95,51 @@ function setupSelfSchedule() {
   };
 
   function updateRetUrl(form) {
-  const cfgRoot = form.querySelector('.selfschedule-configuration');
-  if (!cfgRoot) return;
+    const cfgRoot = form.querySelector('.selfschedule-configuration');
+    if (!cfgRoot) return;
 
-  const config = readConfig(form);
+    const config = readConfig(form);
 
-  const orgSize  = qs(form, '#employees');
-  const jobTitle = qs(form, '#title');
-  const stateEl  = qs(form, '#state');
-  if (!jobTitle) return;
+    const jobTitle = qs(form, '#title');
+    const orgSize  = qs(form, '#employees');
+    const state  = qs(form, '#state');
+    const subscriber = qs(form, '#00N2K00000CWQVv') || qs(form, '[name="00N2K00000CWQVv"]');
 
-  const jt      = jobTitle.value;
-  const stateValue = stateEl ? stateEl.value : '';
-  const siteKey = getSiteKey(form);
-  const rules   = RANGE_CONFIG[siteKey] || RANGE_CONFIG.default;
+    if (!jobTitle) return;
 
-  let bucket;
+    const jt      = jobTitle.value;
+    const stateValue = state ? state.value : '';
+    const isSubscriber = !!subscriber && subscriber.checked;
+    const siteKey = getSiteKey(form);
+    const rules   = RANGE_CONFIG[siteKey] || RANGE_CONFIG.default;
 
-  if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Ministry Leader') {
-    bucket = 'default';
-  } else if (stateValue === '') {
-    bucket = 'default';
-  } else {
-    if (!orgSize) {
-      bucket = 'one';
+    let bucket;
+
+    if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Ministry Leader') {
+      bucket = 'default';
+    } else if (state && stateValue === '') {
+      bucket = 'default';
     } else {
-      // Org size exists
-      const value = orgSize.value.trim();
-      const hasValue = value !== '';
-
-      if (hasValue) {
-        const index = Number(value);
-        bucket = getBucketFromRanges(index, rules);
+      if (!orgSize) {
+        if (isSubscriber) {
+          bucket = 'two';
+        } else {
+          bucket = 'one';
+        }
       } else {
-        // field exists but is empty
-        bucket = 'default';
+        // Org size exists
+        const value = orgSize.value.trim();
+        const hasValue = value !== '';
+
+        if (hasValue) {
+          const index = Number(value);
+          bucket = getBucketFromRanges(index, rules);
+        } else {
+          // field exists but is empty
+          bucket = 'default';
+        }
       }
     }
-  }
 
     const successBase = config.returl[bucket];
     const retUrlEl   = qs(form, '#retURL') || qs(form, '[name="retURL"]');
@@ -143,7 +150,13 @@ function setupSelfSchedule() {
 
   document.addEventListener('change', (e) => {
     if (!forms.includes(e.target?.form)) return;
-    if (e.target.id === 'employees' || e.target.id === 'title' || e.target.id === 'state') {
+    if (
+      e.target.id === 'employees' ||
+      e.target.id === 'title' ||
+      e.target.id === 'state' ||
+      e.target.id === '00N2K00000CWQVv' ||
+      e.target.name === '00N2K00000CWQVv'
+    ) {
       updateRetUrl(e.target.form);
     }
   });
