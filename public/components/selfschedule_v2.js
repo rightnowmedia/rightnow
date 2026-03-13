@@ -115,7 +115,7 @@ function setupSelfSchedule() {
 
     let bucket;
 
-    if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Ministry Leader') {
+    if (jt === 'Non-Staff' || jt === 'Employee') {
       bucket = 'default';
     } else if (state && stateValue === '') {
       bucket = 'default';

@@ -94,9 +94,15 @@ export function setupForms(ids) {
     rightnowpastors: 'Cross-Site: RightNow Pastors',
     rightnowpastorsplus: 'Cross-Site: RightNow Pastors+',
     rightnowkids: 'Cross-Site: RightNow Kids',
+    christianitytoday: 'Online Advertising: Christianity Today',
+    outreachmediagroup: 'Online Advertising: Outreach',
+    churchexecutive: 'Online Advertising: Church Exec',
   };
 
   const sourceName = SOURCE_MAP[effectiveSource] || '';
+
+  // For Chargebee
+  window.adSourceName = sourceName;
 
   if (sourceName) {
     document.querySelectorAll('#Ad-Source, [name="00N6A00000NUjJQ"]').forEach((field) => {
