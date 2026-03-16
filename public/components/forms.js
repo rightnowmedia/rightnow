@@ -167,7 +167,7 @@ export function setupForms(ids) {
   }
 
   if (campaignName) {
-    document.querySelectorAll('[name="Campaign_ID"]').forEach((field) => {
+    document.querySelectorAll('#utm_campaign').forEach((field) => {
       field.value = campaignName;
     });
   }
