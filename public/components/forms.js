@@ -32,37 +32,40 @@ export function setupForms(ids) {
   });
 
 
-  //////////// GET UTM SOURCE FROM URL ////////////
+  //////////// GET UTM SOURCE & CAMPAIGN FROM URL ////////////
 
   const params = new URLSearchParams(window.location.search);
+
   const utmSourceFromUrl = (params.get('utm_source') || '').toLowerCase();
+  const utmCampaignFromUrl = (params.get('utm_campaign') || '').toLowerCase();
 
   const TTL = 1000 * 60 * 60 * 24 * 7;
   const LOW_PRIORITY = ['email', 'blog'];
 
-  // Read stored record (new format only: { value, expires })
-  let stored = null;
+
+  // -------- SOURCE STORAGE --------
+
+  let storedSource = null;
   try {
     const raw = localStorage.getItem('utm_source');
-    if (raw) {
-      stored = JSON.parse(raw);
-    }
+    if (raw) storedSource = JSON.parse(raw);
   } catch (e) {
-    stored = null;
+    storedSource = null;
   }
 
-  if (stored && stored.expires && stored.expires < Date.now()) {
-    stored = null;
+  if (storedSource && storedSource.expires && storedSource.expires < Date.now()) {
+    storedSource = null;
   }
 
-  const storedValue = stored && stored.value ? stored.value.toLowerCase() : '';
+  const storedSourceValue = storedSource && storedSource.value
+    ? storedSource.value.toLowerCase()
+    : '';
 
-  // URL UTM is prioirty if present, otherwise fall back to stored
-  const effectiveSource = utmSourceFromUrl || storedValue;
+  const effectiveSource = utmSourceFromUrl || storedSourceValue;
 
   if (utmSourceFromUrl) {
     const isNewLow = LOW_PRIORITY.includes(utmSourceFromUrl);
-    const isStoredHigh = storedValue && !LOW_PRIORITY.includes(storedValue);
+    const isStoredHigh = storedSourceValue && !LOW_PRIORITY.includes(storedSourceValue);
 
     if (!isNewLow || !isStoredHigh) {
       try {
@@ -73,9 +76,45 @@ export function setupForms(ids) {
             expires: Date.now() + TTL,
           })
         );
-      } catch (e) { }
+      } catch (e) {}
     }
   }
+
+
+  // -------- CAMPAIGN STORAGE --------
+
+  let storedCampaign = null;
+  try {
+    const raw = localStorage.getItem('utm_campaign');
+    if (raw) storedCampaign = JSON.parse(raw);
+  } catch (e) {
+    storedCampaign = null;
+  }
+
+  if (storedCampaign && storedCampaign.expires && storedCampaign.expires < Date.now()) {
+    storedCampaign = null;
+  }
+
+  const storedCampaignValue = storedCampaign && storedCampaign.value
+    ? storedCampaign.value.toLowerCase()
+    : '';
+
+  const effectiveCampaign = utmCampaignFromUrl || storedCampaignValue;
+
+  if (utmCampaignFromUrl) {
+    try {
+      localStorage.setItem(
+        'utm_campaign',
+        JSON.stringify({
+          value: utmCampaignFromUrl,
+          expires: Date.now() + TTL,
+        })
+      );
+    } catch (e) {}
+  }
+
+
+  // -------- SOURCE MAP --------
 
   const SOURCE_MAP = {
     google: 'Online Advertising: Google',
@@ -99,14 +138,37 @@ export function setupForms(ids) {
     churchexecutive: 'Online Advertising: Church Exec',
   };
 
-  const sourceName = SOURCE_MAP[effectiveSource] || '';
 
-  // For Chargebee
+  // -------- CAMPAIGN MAP (example list) --------
+
+  const CAMPAIGN_MAP = {
+    built_for_this_lp: 'Built For This LP',
+  };
+
+
+  // -------- RESOLVE VALUES --------
+
+  const sourceName = SOURCE_MAP[effectiveSource] || '';
+  const campaignName = CAMPAIGN_MAP[effectiveCampaign] || '';
+
+
+  // -------- EXPOSE FOR CHARGEBEE --------
+
   window.adSourceName = sourceName;
+  window.campaignName = campaignName;
+
+
+  // -------- POPULATE FORM FIELDS --------
 
   if (sourceName) {
     document.querySelectorAll('#Ad-Source, [name="00N6A00000NUjJQ"]').forEach((field) => {
       field.value = sourceName;
+    });
+  }
+
+  if (campaignName) {
+    document.querySelectorAll('[name="Campaign_ID"]').forEach((field) => {
+      field.value = campaignName;
     });
   }
 
