@@ -143,6 +143,7 @@ export function setupForms(ids) {
 
   const CAMPAIGN_MAP = {
     built_for_this_lp: 'Built For This LP',
+    bft2026: 'Built For This LP',
   };
 
 
@@ -150,12 +151,14 @@ export function setupForms(ids) {
 
   const sourceName = SOURCE_MAP[effectiveSource] || '';
   const campaignName = CAMPAIGN_MAP[effectiveCampaign] || '';
+  const sourceValue = effectiveSource || '';
 
 
   // -------- EXPOSE FOR CHARGEBEE --------
 
   window.adSourceName = sourceName;
   window.campaignName = campaignName;
+  window.sourceValue = sourceValue;
 
 
   // -------- POPULATE FORM FIELDS --------
@@ -169,6 +172,12 @@ export function setupForms(ids) {
   if (campaignName) {
     document.querySelectorAll('#utm_campaign').forEach((field) => {
       field.value = campaignName;
+    });
+  }
+
+  if (sourceValue) {
+    document.querySelectorAll('#utm_source').forEach((field) => {
+      field.value = sourceValue;
     });
   }
 
