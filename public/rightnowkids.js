@@ -8,5 +8,6 @@ console.log('rightnowkids loaded');
 setupGlobal();
 setupPopups();
 setupForms();
+selfScheduleKids();
 
 
