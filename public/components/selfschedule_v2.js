@@ -44,6 +44,7 @@ function getSiteKey(form) {
   if (id.startsWith('demoForm_US')) return 'us';
   if (id.startsWith('demoForm_RNMW')) return 'rnwm';
   if (id.startsWith('demoForm_PastorsPlus')) return 'pastorsplus';
+  if (id.startsWith('demoForm_Schools')) return 'schools';
   return 'default';
 }
 
