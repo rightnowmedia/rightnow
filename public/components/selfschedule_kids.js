@@ -2,8 +2,10 @@
 
 function setupSelfScheduleKids() {
   const forms = Array.from(document.querySelectorAll('form'))
-    .filter(form => form.id?.startsWith('demoForm_Kids') &&
-                    form.querySelector('.selfschedule-configuration'));
+    .filter(form =>
+      form.id?.startsWith('demoForm_Kids') &&
+      form.querySelector('.selfschedule-configuration')
+    );
 
   if (!forms.length) return;
 
@@ -46,40 +48,42 @@ function setupSelfScheduleKids() {
     const cfg = readConfig(form);
 
     const title = qs(form, '#title')?.value || '';
-    const state = qs(form, '#state')?.value || '';
+
+    const stateEl = qs(form, '#state');
+    const stateValue = (stateEl?.value || '').trim().toLowerCase();
+    const stateText =
+      stateEl?.selectedOptions?.[0]?.textContent?.trim().toLowerCase() || '';
+
+    // "Not in the U.S." detection
+    const isNotUS =
+      (!stateValue && stateText.includes('not in')) ||
+      stateValue.includes('not in') ||
+      stateValue === 'not_us' ||
+      stateValue === 'not_in_us';
 
     let bucket = 'default';
 
-  
-// --- State override ---
-const isNotUS =
-  state === 'not in the u.s.' ||
-  state === 'not in the us' ||
-  state === 'not_us';
+    // State override ALWAYS wins
+    if (!isNotUS) {
+      switch (title) {
+        case 'Non-Staff':
+        case 'Kids Ministry Volunteer':
+          bucket = 'default';
+          break;
 
-if (isNotUS) {
-  bucket = 'default';
-} else {
-  // --- Title-based routing ---
-  switch (title) {
-    case 'Non-Staff':
-    case 'Kids Ministry Volunteer':
-      bucket = 'default';
-      break;
+        case 'Pastoral Staff':
+        case 'Kids Ministry Leader':
+          bucket = 'one';
+          break;
 
-    case 'Pastoral Staff':
-    case 'Kids Ministry Leader':
-      bucket = 'one';
-      break;
+        case 'School/Preschool Administrator':
+          bucket = 'two';
+          break;
 
-    case 'School/Preschool Administrator':
-      bucket = 'two';
-      break;
-
-    default:
-      bucket = 'default';
-  }
-}
+        default:
+          bucket = 'default';
+      }
+    }
 
     const successBase = cfg[bucket];
     const retUrlEl =
@@ -95,10 +99,7 @@ if (isNotUS) {
   document.addEventListener('change', (e) => {
     if (!forms.includes(e.target?.form)) return;
 
-    if (
-      e.target.id === 'title' ||
-      e.target.id === 'state'
-    ) {
+    if (e.target.id === 'title' || e.target.id === 'state') {
       updateRetUrl(e.target.form);
     }
   });
