@@ -50,30 +50,36 @@ function setupSelfScheduleKids() {
 
     let bucket = 'default';
 
-    // --- State override ---
-    if (state === 'Not in the U.S.') {
+  
+// --- State override ---
+const isNotUS =
+  state === 'not in the u.s.' ||
+  state === 'not in the us' ||
+  state === 'not_us';
+
+if (isNotUS) {
+  bucket = 'default';
+} else {
+  // --- Title-based routing ---
+  switch (title) {
+    case 'Non-Staff':
+    case 'Kids Ministry Volunteer':
       bucket = 'default';
-    } else {
-      // --- Title-based routing ---
-      switch (title) {
-        case 'Non-Staff':
-        case 'Kids Ministry Volunteer':
-          bucket = 'default';
-          break;
+      break;
 
-        case 'Pastoral Staff':
-        case 'Kids Ministry Leader':
-          bucket = 'one';
-          break;
+    case 'Pastoral Staff':
+    case 'Kids Ministry Leader':
+      bucket = 'one';
+      break;
 
-        case 'School/Preschool Administrator':
-          bucket = 'two';
-          break;
+    case 'School/Preschool Administrator':
+      bucket = 'two';
+      break;
 
-        default:
-          bucket = 'default';
-      }
-    }
+    default:
+      bucket = 'default';
+  }
+}
 
     const successBase = cfg[bucket];
     const retUrlEl =
