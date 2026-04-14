@@ -72,7 +72,7 @@ function setupSelfScheduleKids() {
           break;
 
         case 'Pastoral Staff':
-        case 'Kids Ministry Leader':
+        case 'Kids Ministry Staff':
           bucket = 'one';
           break;
 
