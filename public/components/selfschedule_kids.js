@@ -40,7 +40,6 @@ function setupSelfScheduleKids() {
     return {
       default: text('.selfschedule-returl-default'),
       one:     text('.selfschedule-returl-1'),
-      two:     text('.selfschedule-returl-2'),
     };
   };
 
@@ -73,11 +72,8 @@ function setupSelfScheduleKids() {
 
         case 'Pastoral Staff':
         case 'Kids Ministry Staff':
-          bucket = 'one';
-          break;
-
         case 'School/Preschool Administrator':
-          bucket = 'two';
+          bucket = 'one';
           break;
 
         default:
