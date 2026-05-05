@@ -3,41 +3,50 @@ export function setupForms(ids) {
 
   console.log("Forms Component Active");
 
-  // If specific IDs were provided, honor that first
   if (Array.isArray(ids) && ids.length) {
     const found = ids.some(id => document.getElementById(id));
     if (!found) return;
   }
 
-  // Stop if no forms at all
   const forms = Array.from(document.querySelectorAll('form'));
   if (!forms.length) return;
 
-  
+
   //////////// STATE FIELD BEHAVIOR ////////////
 
   document.querySelectorAll("form").forEach((form) => {
-    const stateSelect = form.querySelector( 'select[name="State"], select[name="state"]' );
+    const stateSelect = form.querySelector(
+      'select[name="State"], select[name="state"]'
+    );
     if (!stateSelect) return;
+
     stateSelect.required = true;
 
     stateSelect.addEventListener("change", () => {
       stateSelect.required = false;
-      const countryField = form.querySelector( '[name="Country"], [name="country"]' );
+      const countryField = form.querySelector(
+        '[name="Country"], [name="country"]'
+      );
       if (countryField && countryField.type === "hidden") {
         countryField.value = stateSelect.value ? "United States" : "";
       }
     });
-    
   });
 
 
-  //////////// GET UTM SOURCE & CAMPAIGN FROM URL ////////////
+  //////////// GET UTM PARAMS FROM URL ////////////
 
   const params = new URLSearchParams(window.location.search);
 
-  const utmSourceFromUrl = (params.get('utm_source') || '').toLowerCase();
-  const utmCampaignFromUrl = (params.get('utm_campaign') || '').toLowerCase();
+  const utmSourceFromUrl =
+    (params.get('utm_source') || '').toLowerCase();
+
+  const utmCampaignFromUrl =
+    (params.get('utm_campaign') || '').toLowerCase();
+
+  const emailSourceFromUrl =
+    (params.get('email_source') || '').toLowerCase();
+
 
   const TTL = 1000 * 60 * 60 * 24 * 7;
   const LOW_PRIORITY = ['email', 'blog'];
@@ -49,23 +58,23 @@ export function setupForms(ids) {
   try {
     const raw = localStorage.getItem('utm_source');
     if (raw) storedSource = JSON.parse(raw);
-  } catch (e) {
+  } catch (e) {}
+
+  if (storedSource?.expires < Date.now()) {
     storedSource = null;
   }
 
-  if (storedSource && storedSource.expires && storedSource.expires < Date.now()) {
-    storedSource = null;
-  }
+  const storedSourceValue =
+    storedSource?.value?.toLowerCase() || '';
 
-  const storedSourceValue = storedSource && storedSource.value
-    ? storedSource.value.toLowerCase()
-    : '';
-
-  const effectiveSource = utmSourceFromUrl || storedSourceValue;
+  const effectiveSource =
+    utmSourceFromUrl || storedSourceValue;
 
   if (utmSourceFromUrl) {
     const isNewLow = LOW_PRIORITY.includes(utmSourceFromUrl);
-    const isStoredHigh = storedSourceValue && !LOW_PRIORITY.includes(storedSourceValue);
+    const isStoredHigh =
+      storedSourceValue &&
+      !LOW_PRIORITY.includes(storedSourceValue);
 
     if (!isNewLow || !isStoredHigh) {
       try {
@@ -87,19 +96,17 @@ export function setupForms(ids) {
   try {
     const raw = localStorage.getItem('utm_campaign');
     if (raw) storedCampaign = JSON.parse(raw);
-  } catch (e) {
+  } catch (e) {}
+
+  if (storedCampaign?.expires < Date.now()) {
     storedCampaign = null;
   }
 
-  if (storedCampaign && storedCampaign.expires && storedCampaign.expires < Date.now()) {
-    storedCampaign = null;
-  }
+  const storedCampaignValue =
+    storedCampaign?.value?.toLowerCase() || '';
 
-  const storedCampaignValue = storedCampaign && storedCampaign.value
-    ? storedCampaign.value.toLowerCase()
-    : '';
-
-  const effectiveCampaign = utmCampaignFromUrl || storedCampaignValue;
+  const effectiveCampaign =
+    utmCampaignFromUrl || storedCampaignValue;
 
   if (utmCampaignFromUrl) {
     try {
@@ -107,6 +114,37 @@ export function setupForms(ids) {
         'utm_campaign',
         JSON.stringify({
           value: utmCampaignFromUrl,
+          expires: Date.now() + TTL,
+        })
+      );
+    } catch (e) {}
+  }
+
+
+  // -------- EMAIL SOURCE STORAGE --------
+
+  let storedEmailSource = null;
+  try {
+    const raw = localStorage.getItem('email_source');
+    if (raw) storedEmailSource = JSON.parse(raw);
+  } catch (e) {}
+
+  if (storedEmailSource?.expires < Date.now()) {
+    storedEmailSource = null;
+  }
+
+  const storedEmailSourceValue =
+    storedEmailSource?.value?.toLowerCase() || '';
+
+  const effectiveEmailSource =
+    emailSourceFromUrl || storedEmailSourceValue;
+
+  if (emailSourceFromUrl) {
+    try {
+      localStorage.setItem(
+        'email_source',
+        JSON.stringify({
+          value: emailSourceFromUrl,
           expires: Date.now() + TTL,
         })
       );
@@ -139,7 +177,7 @@ export function setupForms(ids) {
   };
 
 
-  // -------- CAMPAIGN MAP (example list) --------
+  // -------- CAMPAIGN MAP --------
 
   const CAMPAIGN_MAP = {
     built_for_this_lp: 'Built For This LP',
@@ -149,38 +187,55 @@ export function setupForms(ids) {
 
   // -------- RESOLVE VALUES --------
 
-  const sourceName = SOURCE_MAP[effectiveSource] || '';
-  const campaignName = CAMPAIGN_MAP[effectiveCampaign] || '';
-  const sourceValue = effectiveSource || '';
+  const sourceName =
+    SOURCE_MAP[effectiveSource] || '';
+
+  const campaignName =
+    CAMPAIGN_MAP[effectiveCampaign] || '';
+
+  const sourceValue =
+    effectiveSource || '';
 
 
-  // -------- EXPOSE FOR CHARGEBEE --------
+  // -------- EXPOSE GLOBALLY --------
 
   window.adSourceName = sourceName;
   window.campaignName = campaignName;
   window.sourceValue = sourceValue;
+  window.emailSource = effectiveEmailSource;
 
 
   // -------- POPULATE FORM FIELDS --------
 
   if (sourceName) {
-    document.querySelectorAll('#Ad-Source, [name="00N6A00000NUjJQ"]').forEach((field) => {
+    document.querySelectorAll(
+      '#Ad-Source, [name="00N6A00000NUjJQ"]'
+    ).forEach(field => {
       field.value = sourceName;
     });
   }
 
   if (campaignName) {
-    document.querySelectorAll('#utm_campaign').forEach((field) => {
-      field.value = campaignName;
-    });
+    document.querySelectorAll('#utm_campaign')
+      .forEach(field => {
+        field.value = campaignName;
+      });
   }
 
   if (sourceValue) {
-    document.querySelectorAll('#utm_source').forEach((field) => {
-      field.value = sourceValue;
-    });
+    document.querySelectorAll('#utm_source')
+      .forEach(field => {
+        field.value = sourceValue;
+      });
   }
 
+  if (effectiveEmailSource) {
+    document.querySelectorAll(
+      '#email_source, [name="00NUo000005etZB"]'
+    ).forEach(field => {
+      field.value = effectiveEmailSource;
+    });
+  }
   
   ////////////// WEBTOLEAD RECAPTCHA SETUP ////////////
 
