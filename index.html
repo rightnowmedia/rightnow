@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RightNow Media</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fff;
+      color: #231f20;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    header svg {
+      width: 40px;
+      height: auto;
+    }
+
+    header span {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .hero-logo {
+      width: 80px;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #555;
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta {
+      display: inline-block;
+      background: #231f20;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.85rem 2rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+
+    .cta:hover {
+      opacity: 0.8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: #999;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.32 65.08"><defs><style>.cls-1{fill:#231f20;}</style></defs><g><g><g><g><path class="cls-1" d="M55.21,29.62l-10-5.91a1.61,1.61,0,0,0-1.29,0l-6.83,4.07a2.81,2.81,0,0,1-3.33,0,7,7,0,0,0-3.32-.56,7.38,7.38,0,0,0-4.06,1.11,6.56,6.56,0,0,0-3,3.32,12.3,12.3,0,0,0-1.11,5.17V54.18a.39.39,0,0,0,.37.37h.19l32.68-19a3.14,3.14,0,0,0,1.42-4.21l-.12-.22A6.18,6.18,0,0,0,55.21,29.62Z"/><path class="cls-1" d="M11.45,18.73A.83.83,0,0,1,12,18h9.24a.82.82,0,0,1,.74.55h0v2.59a.18.18,0,0,0,.18.18h.18a16.09,16.09,0,0,1,3.7-2.4,14.81,14.81,0,0,1,7.38-1.48h.74s.19,0,.19-.18a.2.2,0,0,0-.19-.19L5,.44A3.36,3.36,0,0,0,.41,1.67l0,.07A5.26,5.26,0,0,0,0,3.4V61.75a3.31,3.31,0,0,0,3.29,3.33h0A5.68,5.68,0,0,0,5,64.71L10.9,61a1,1,0,0,0,.55-.92Z"/></g></g></g></g></svg>
+    <span>RightNow Media</span>
+  </header>
+
+  <main>
+    <svg class="hero-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57.32 65.08"><defs><style>.cls-1{fill:#231f20;}</style></defs><g><g><g><g><path class="cls-1" d="M55.21,29.62l-10-5.91a1.61,1.61,0,0,0-1.29,0l-6.83,4.07a2.81,2.81,0,0,1-3.33,0,7,7,0,0,0-3.32-.56,7.38,7.38,0,0,0-4.06,1.11,6.56,6.56,0,0,0-3,3.32,12.3,12.3,0,0,0-1.11,5.17V54.18a.39.39,0,0,0,.37.37h.19l32.68-19a3.14,3.14,0,0,0,1.42-4.21l-.12-.22A6.18,6.18,0,0,0,55.21,29.62Z"/><path class="cls-1" d="M11.45,18.73A.83.83,0,0,1,12,18h9.24a.82.82,0,0,1,.74.55h0v2.59a.18.18,0,0,0,.18.18h.18a16.09,16.09,0,0,1,3.7-2.4,14.81,14.81,0,0,1,7.38-1.48h.74s.19,0,.19-.18a.2.2,0,0,0-.19-.19L5,.44A3.36,3.36,0,0,0,.41,1.67l0,.07A5.26,5.26,0,0,0,0,3.4V61.75a3.31,3.31,0,0,0,3.29,3.33h0A5.68,5.68,0,0,0,5,64.71L10.9,61a1,1,0,0,0,.55-.92Z"/></g></g></g></g></svg>
+    <h1>Stream. Grow. Together.</h1>
+    <p>Faith-based streaming for churches, small groups, and families — thousands of Bible studies, sermons, and kids content.</p>
+    <a class="cta" href="#">Get Started Free</a>
+  </main>
+
+  <footer>
+    &copy; 2026 RightNow Media. All rights reserved.
+  </footer>
+
+</body>
+</html>
