@@ -236,6 +236,38 @@ export function setupForms(ids) {
       field.value = effectiveEmailSource;
     });
   }
+
+
+  // -------- STANDARD URL PARAM -> FORM FIELD MAP --------
+
+  const FIELD_MAP = {
+
+    first_name: '#first_name, [name="first_name"], [name="First-Name"]',
+    last_name: '#last_name, [name="last_name"], [name="Last-Name"]',
+    email: '#email, [name="email"], [name="Email"]',
+    phone: '#phone, [name="phone"], [name="Phone"]',
+    company: '#company, [name="company"], [name="Company"]',
+    org_size: '#employees, [name="employees"], [name="Organization-Size"]',
+    city: '#city, [name="city"], [name="City"]',
+    state: '#state, [name="state"], [name="State"]',
+    job_title: '#title, [name="title"], [name="Job-Title"]',
+
+  };
+
+  forms.forEach((form) => {
+    Object.entries(FIELD_MAP).forEach(([param, selector]) => {
+      const value = params.get(param);
+      if (!value) return;
+
+      form.querySelectorAll(selector).forEach(field => {
+        field.value = value;
+
+        // Needed for fields with dependent logic, especially State -> Country
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    });
+  });
   
   ////////////// WEBTOLEAD RECAPTCHA SETUP ////////////
 
