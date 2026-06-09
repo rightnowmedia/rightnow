@@ -182,6 +182,7 @@ export function setupForms(ids) {
   const CAMPAIGN_MAP = {
     built_for_this_lp: 'Built For This LP',
     bft2026: 'Built For This LP',
+    infinitemedia: 'Gods Kids LP',
   };
 
 
