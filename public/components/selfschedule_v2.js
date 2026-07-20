@@ -116,7 +116,7 @@ function setupSelfSchedule() {
 
     let bucket;
 
-    if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Teacher' || jt === 'School Staff') {
+    if (jt === 'Non-Staff' || jt === 'Employee' || jt === 'Teacher' || jt === 'School Staff' || jt === 'Campus Ministry Director') {
       bucket = 'default';
     } else if (state && stateValue === '') {
       bucket = 'default';

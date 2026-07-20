@@ -6,16 +6,7 @@ import { successAllPages } from './pages/success.js';
 console.log('rightnowmedia loaded');
 
 setupGlobal();
-
-setupForms([
-  'demoForm_US',
-  'demoForm_US_ReturningVisitor',
-  'demoForm_US_Popup',
-  'demoForm_US_AdLandingPage',
-  'demoForm_UK',
-  'demoForm_UK_Popup',
-]);
-
+setupForms();
 selfScheduleUS();
 
 
