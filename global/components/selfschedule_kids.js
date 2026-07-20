@@ -113,4 +113,5 @@ function setupSelfScheduleKids() {
 
 export function selfScheduleKids() {
   setupSelfScheduleKids();
+  setupCalendlyPrefill();
 }
