@@ -109,6 +109,32 @@ function setupSelfScheduleKids() {
   });
 }
 
+////////////// Calendly Prefill //////////////
+
+function setupCalendlyPrefill() {
+  const params = new URLSearchParams(window.location.search);
+  const name  = params.get('name')  || '';
+  const email = params.get('email') || '';
+
+  if (!name && !email) return;
+
+  const widget = document.querySelector('.calendly-inline-widget');
+  if (!widget) return;
+
+  const src = widget.dataset.url || widget.getAttribute('data-url') || '';
+  if (!src) return;
+
+  const url = new URL(src);
+  if (name)  url.searchParams.set('name',  name);
+  if (email) url.searchParams.set('email', email);
+  widget.dataset.url = url.toString();
+
+  if (window.Calendly?.initInlineWidget) {
+    widget.innerHTML = '';
+    Calendly.initInlineWidget({ url: url.toString(), parentElement: widget });
+  }
+}
+
 ////////////// Public API //////////////
 
 export function selfScheduleKids() {
